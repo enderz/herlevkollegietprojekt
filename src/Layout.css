@@ -1,0 +1,183 @@
+.root{
+    -fx-background-color: #508090;
+}
+.button{
+    -fx-background-color: #508090;
+    -fx-font-weight: bolder;
+    -fx-background-position: center;
+    -fx-background-radius: 10pt;
+    -fx-text-fill: white;
+
+}
+.button:hover{
+    -fx-background-color: linear-gradient(#606090,#ffffff);
+    -fx-background-color: White;
+    -fx-text-fill: black;
+}
+.menu-bar{
+    -fx-border-color: BLACK;
+}
+.table-view{
+    -fx-border-style: hidden;
+
+}
+.formandbutton{
+    -fx-background-size: 200px;
+}
+
+.button-logout{
+    -fx-background-size: 22pt;
+    -fx-font-size: 20pt;
+    -fx-padding: 10pt;
+}
+.button-hovedmenu{
+    -fx-background-size: 22pt;
+    -fx-font-size: 20pt;
+    -fx-padding: 10pt;
+}
+.label-hovedmenu{
+    -fx-font-size: 25pt;
+    -fx-border-style: hidden;
+    -fx-font-weight: bolder;
+    -fx-alignment: center;
+}
+
+.button-tilfoej{
+    -fx-background-size: 50pt;
+    -fx-font-weight: bolder;
+    -fx-background-color: forestgreen;
+    -fx-font-size: 14pt;
+}
+.button-tilfoej:hover{
+    -fx-background-color: linear-gradient(forestgreen,lawngreen);
+    -fx-text-fill: whitesmoke;
+}
+.button-fjern{
+    -fx-background-size: 50pt;
+    -fx-font-weight: bolder;
+    -fx-background-color: red;
+    -fx-text-fill: white;
+    -fx-font-size: 14pt;
+}
+.button-fjern:hover{
+    -fx-background-color: linear-gradient(red,darkred);
+    -fx-text-fill: whitesmoke;
+}
+.button-opdater-medlem{
+    -fx-text-alignment: CENTER;
+    -fx-padding: 20pt;
+    -fx-background-color: Red;
+    -fx-font-weight: bold;
+    -fx-font-size: 14pt;
+}
+.button-opdater-medlem:hover{
+    -fx-font-weight: bolder;
+    -fx-background-color: linear-gradient(red, darkred);
+    -fx-text-fill: white;
+}
+.button-paabegynd-studiekontrol{
+    -fx-text-alignment: CENTER;
+    -fx-padding: 20pt;
+    -fx-background-color: green;
+    -fx-font-weight: bold;
+    -fx-font-size: 14pt;
+}
+.button-paabegynd-studiekontrol:hover{
+    -fx-font-weight: bolder;
+    -fx-background-color: linear-gradient(green, forestgreen);
+    -fx-text-fill: white;
+}
+.button-rediger-afslut-studiekontrol{
+    -fx-text-alignment: CENTER;
+    -fx-padding: 10pt;
+    -fx-background-color: Blue;
+    -fx-font-weight: bold;
+    -fx-font-size: 14pt;
+}
+.button-rediger-afslut-studiekontrol:hover{
+    -fx-font-weight: bolder;
+    -fx-background-color: linear-gradient(blue, darkblue);
+    -fx-text-fill: white;
+}
+
+.button-tab{
+    -fx-text-alignment: CENTER;
+    -fx-background-color: green;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+
+}
+.tab-pane *.tab-header-area *.tab-header-background {
+    -fx-background-color:transparent;
+}
+
+.tab-pane {
+    -fx-tab-min-height:50px;
+    -fx-tab-max-height:50px;
+}
+
+.tab-studiekontrol {
+    -fx-background-color: green;
+}
+
+.tab:selected {
+    -fx-background-color: cornflowerblue;
+}
+
+.button-afslut-dispensation{
+    -fx-text-alignment: CENTER;
+    -fx-padding: 20pt;
+    -fx-background-color: Red;
+    -fx-font-weight: bold;
+    -fx-font-size: 14pt;
+}
+.button-afslut-dispensation:hover{
+    -fx-font-weight: bolder;
+    -fx-background-color: linear-gradient(red, darkred);
+    -fx-text-fill: white;
+}
+.button-rediger-dispensation{
+    -fx-text-alignment: CENTER;
+    -fx-padding: 20pt;
+    -fx-background-color: green;
+    -fx-font-weight: bold;
+    -fx-font-size: 14pt;
+}
+.button-rediger-dispensation:hover{
+    -fx-font-weight: bolder;
+    -fx-background-color: linear-gradient(green, forestgreen);
+    -fx-text-fill: white;
+}
+.button-svar-paa-dispensation{
+    -fx-text-alignment: CENTER;
+    -fx-padding: 5pt;
+    -fx-background-color: Blue;
+    -fx-font-weight: bold;
+    -fx-font-size: 14pt;
+}
+.button-svar-paa-dispensation:hover{
+    -fx-font-weight: bolder;
+    -fx-background-color: linear-gradient(blue, darkblue);
+    -fx-text-fill: white;
+}
+.root-login{
+    -fx-background-color: gray;
+}
+.button-login{
+    -fx-background-color: lightgray;
+    -fx-text-fill: black;
+}
+.button-login:hover{
+    -fx-background-color: linear-gradient(lightgray,whitesmoke);
+}
+.label-login{
+    -fx-font-weight: bolder;
+    -fx-font-size: 13pt;
+}
+.button-klage{
+    -fx-font-weight: bolder;
+    -fx-background-color: linear-gradient(blue, darkblue);
+    -fx-text-fill: white;
+    -fx-padding: 5pt;
+    -fx-font-size: 25pt;
+}

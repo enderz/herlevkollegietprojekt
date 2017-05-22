@@ -1,0 +1,79 @@
+.root{
+    -fx-background-color: linear-gradient(lightblue, #508090);
+    -fx-padding: 10pt;
+}
+.button{
+    -fx-font-weight: bold;
+    -fx-padding: 5pt;
+}
+.label{
+    -fx-font-size: 14pt;
+    -fx-font-weight: bold;
+}
+
+.button:hover{
+    -fx-background-color: linear-gradient(lightgray,whitesmoke);
+}
+.button-hent-beboer-info{
+    -fx-text-alignment: CENTER;
+    -fx-padding: 10pt;
+    -fx-background-color: Red;
+    -fx-font-weight: bold;
+    -fx-font-size: 14pt;
+    -fx-background-radius: 5pt;
+    -fx-text-fill: whitesmoke;
+}
+.button-hent-beboer-info:hover{
+    -fx-font-weight: bolder;
+    -fx-background-color: linear-gradient(Red, darkred);
+    -fx-text-fill: white;
+}
+.label-hent-beboer-info{
+    -fx-alignment: center;
+}
+.text-field-hent-beboer-info{
+    -fx-max-width: 35pt;
+    -fx-min-width: 35pt;
+}
+.button-paabegynd-studiekontrol{
+    -fx-text-alignment: CENTER;
+    -fx-padding: 10pt;
+    -fx-background-color: green;
+    -fx-font-weight: bold;
+    -fx-font-size: 14pt;
+    -fx-background-radius: 5pt;
+    -fx-text-fill: whitesmoke;
+}
+.button-paabegynd-studiekontrol:hover{
+    -fx-font-weight: bolder;
+    -fx-background-color: linear-gradient(green, forestgreen);
+    -fx-text-fill: white;
+}
+.button-udsaet-studiekontrol{
+    -fx-text-alignment: CENTER;
+    -fx-padding: 5pt;
+    -fx-background-color: red;
+    -fx-font-weight: bold;
+    -fx-font-size: 14pt;
+    -fx-background-radius: 5pt;
+    -fx-text-fill: whitesmoke;
+}
+.button-udsaet-studiekontrol:hover{
+    -fx-font-weight: bolder;
+    -fx-background-color: linear-gradient(red, darkred);
+    -fx-text-fill: white;
+}
+.button-afslut-studiekontrol{
+    -fx-text-alignment: CENTER;
+    -fx-padding: 5pt;
+    -fx-background-color: green;
+    -fx-font-weight: bold;
+    -fx-font-size: 14pt;
+    -fx-background-radius: 5pt;
+    -fx-text-fill: whitesmoke;
+}
+.button-afslut-studiekontrol:hover{
+    -fx-font-weight: bolder;
+    -fx-background-color: linear-gradient(green, forestgreen);
+    -fx-text-fill: white;
+}
