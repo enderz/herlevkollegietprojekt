@@ -18,13 +18,14 @@ import java.util.Date;
  */
 public class HovedMenuFunktion {
 
-    TableView<Beboer> beboerListe = new TableView<Beboer>();
+    TableView<Beboer> beboerListe = new TableView<>();
     final ObservableList<Beboer> beboerData = FXCollections.observableArrayList();
     PreparedStatement preparedStatement;
     ResultSet resultSet;
-    //Connection conn;
+    Connection conn;
 
-    public void opdatereBeboerListe(Connection conn){
+    public void opdatereBeboerListe(){
+
             beboerData.clear();
             try{
                 String sql = "SELECT * FROM Beboer";
