@@ -4,10 +4,14 @@ package Model;
  */
 public class Vaerelse
 {
-    private int vaerelseNr;
-    private String sal;
+    public int vaerelseNr;
+    public String sal;
 
-    public Vaerelse(){}
+    public Vaerelse(int roomNr, String floor)
+    {
+        vaerelseNr = roomNr;
+        sal = floor;
+    }
 
     public int getVaerelseNr() {
         return vaerelseNr;

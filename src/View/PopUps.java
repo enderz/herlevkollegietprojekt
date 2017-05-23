@@ -25,7 +25,6 @@ public class PopUps
     static Connection conn;
     static ResultSet resultSet;
     static HovedMenuFunktion hovedMenuFunktion = new HovedMenuFunktion();
-    Main main = new Main();
 
     public static void tilføjDeadline(String title, String message)
     {
@@ -78,6 +77,7 @@ public class PopUps
      */
 
     public static void opretBeboer(Connection conn, TableView<Beboer> beboerListe, ObservableList<Beboer> beboerData) {
+
         Stage window = new Stage();
 
         window.initModality(Modality.APPLICATION_MODAL);
@@ -289,6 +289,8 @@ public class PopUps
 
         Scene scene = new Scene(layout);
         scene.getStylesheets().add("PopupsLayout.css");
+        //scene.setOnKeyPressed(event -> {
+        //            });
         window.setScene(scene);
         window.showAndWait();
     }

@@ -9,6 +9,9 @@ import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -88,6 +91,7 @@ public class Main extends Application
                 loginAlert();
             }
         });
+
         Button annullerButton  = new Button("Annuller");
         GridPane.setConstraints(annullerButton,1,3);
         annullerButton.setOnAction(e -> {
@@ -97,6 +101,17 @@ public class Main extends Application
 
         grid.getChildren().addAll(nameLabel, nameInput, passwordLabel, passwordInput, loginButton, annullerButton);
         sceneLogin = new Scene(grid, 500,200);
+        sceneLogin.setOnKeyPressed(event -> {
+            if(loginFunk.login(conn, nameInput, passwordInput)==true){
+                try{
+                    startHovedMenu(window);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }else{
+                loginAlert();
+            }
+        });
 
         window.setScene(sceneLogin);
         window.show();
@@ -209,7 +224,7 @@ public class Main extends Application
         behandlerInitialer.setSortable(false); // Fjerner mulighed for at sortere
         behandlerInitialer.setCellValueFactory(new PropertyValueFactory<>("behandlerInitialer"));//Property need to match the class's field names
 
-        TableView udlejedeVærelserTableView = new TableView();
+        TableView udlejedeVærelserTableView = new TableView<>();
         udlejedeVærelserTableView.setMaxSize(430,217);
         udlejedeVærelserTableView.setItems(getVærelsesUdlejning());
         udlejedeVærelserTableView.getColumns().addAll(udlejedeVærelser,udlejningsdato1,behandlingsdato,behandlerInitialer);
@@ -647,7 +662,7 @@ public class Main extends Application
     }
     public ObservableList<VaerelsesUdlejning> getVærelsesUdlejning() {
         ObservableList<VaerelsesUdlejning> værelsesUdlejning = FXCollections.observableArrayList();
-        værelsesUdlejning.add(new VaerelsesUdlejning(404,new java.util.Date(2017,10,29)));
+        //værelsesUdlejning.add(new VaerelsesUdlejning(404,new java.util.Date(2017,10,29)));
         return værelsesUdlejning;
     }
     public ObservableList<Dispensation> getDispensation(){
@@ -910,5 +925,6 @@ public class Main extends Application
         beboerListe.getColumns().addAll(værelseBeboerListe, navnBeboerListe, indflytningsdatoBeboerliste, institutionBeboerListe, påbegyndtUddannelseBeboerListe, uddannelseAfsluttesBeboerListe, uddannelsesRetningBeboerListe, emailBeboerListe);
 
     }
+
 }
 

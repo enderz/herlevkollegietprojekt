@@ -3,15 +3,19 @@ package Controller;
 import Model.Beboer;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Stage;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -24,8 +28,6 @@ public class HovedMenuFunktion {
     PreparedStatement preparedStatement;
     ResultSet resultSet;
     Connection conn;
-
-
 
     public void opdatereBeboerListe(){
             beboerData.clear();
@@ -55,7 +57,7 @@ public class HovedMenuFunktion {
             }
 
 
-        }
+    }
     public ObservableList<Beboer> getBeboer() {
         ObservableList<Beboer> beboer = FXCollections.observableArrayList();
         return beboer;
@@ -99,6 +101,14 @@ public class HovedMenuFunktion {
         beboerListe.setItems(getBeboer());
         beboerListe.getColumns().addAll(værelseBeboerListe, navnBeboerListe, indflytningsdatoBeboerliste, institutionBeboerListe, påbegyndtUddannelseBeboerListe, uddannelseAfsluttesBeboerListe, uddannelsesRetningBeboerListe, emailBeboerListe);
 
+    }
+
+    public void beboerOkAlert() {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setHeaderText(null);
+        alert.setTitle("Beboer Info");
+        alert.setContentText("Beboer oprettet korrekt.");
+        alert.show();
     }
 
 
