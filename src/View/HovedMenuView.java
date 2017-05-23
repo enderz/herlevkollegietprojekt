@@ -1,17 +1,11 @@
 package View;
 
-import Controller.HovedMenuFunktion;
-import Model.*;
 import Controller.LoginFunktion;
-
+import Model.*;
 import com.sun.javafx.scene.control.skin.DatePickerSkin;
-import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -22,105 +16,32 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.*;
 import java.util.Date;
+import java.util.Optional;
 
 /**
- * Created by Ender on 07-05-2017.
+ * Created by Ender on 23-05-2017.
  */
-public class Main extends Application
+public class HovedMenuView
 {
+
+    /*
     Stage window;
     Scene sceneLogin, sceneStart, sceneStudiekontrol, sceneBeboerListe, sceneFormand;
     DBConnection dbConnection = new DBConnection();
     LoginFunktion loginFunk = new LoginFunktion();
-    PopUps popUps = new PopUps();
     Connection conn;
     PreparedStatement preparedStatement;
     ResultSet resultSet;
     TableView<Beboer> beboerListe;
     final ObservableList<Beboer> beboerData = FXCollections.observableArrayList();
-    //HovedMenuView hovedMenuView = new HovedMenuView();
-
-    public static void main(String[] args)
-    {
-        launch(args);
-    }
-    @Override
-    public void start(Stage primaryStage) throws Exception {
-
-        conn = dbConnection.getDBConnection();
-        dbConnection.checkDBConnection();
-
-        window = primaryStage;
-        window.setTitle("LOG IND - Herlev Kollegiet");
-
-        GridPane grid = new GridPane();
-        grid.setStyle("-fx-background-color: #508090;");
-        grid.setPadding(new Insets(10, 10, 10, 10));
-        grid.setVgap(8);
-        grid.setHgap(10);
-
-        Label nameLabel = new Label("Brugernavn");
-        GridPane.setConstraints(nameLabel, 0 , 0);
-
-        TextField nameInput = new TextField();
-        nameInput.setPromptText("Brugernavn");
-        GridPane.setConstraints(nameInput, 1, 0);
-
-        Label passwordLabel = new Label("Kodeord");
-        GridPane.setConstraints(passwordLabel, 0 , 1);
-
-        PasswordField passwordInput = new PasswordField();
-        passwordInput.setPromptText("Kodeord");
-        GridPane.setConstraints(passwordInput,1 ,1);
-
-        Button loginButton = new Button("Log Ind");
-        GridPane.setConstraints(loginButton,1 ,2);
-        loginButton.setOnAction((ActionEvent event) -> {
-            if(loginFunk.login(conn, nameInput, passwordInput)==true){
-               try{
-                   //hovedMenuView.startHovedMenu(window);
-                   startHovedMenu(window);
-
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
-            }else{
-                loginAlert();
-            }
-        });
-
-        Button annullerButton  = new Button("Annuller");
-        GridPane.setConstraints(annullerButton,1,3);
-        annullerButton.setOnAction(e -> {
-            dbConnection.closeDBConnection(conn);
-            window.close();
-        });
-
-        grid.getChildren().addAll(nameLabel, nameInput, passwordLabel, passwordInput, loginButton, annullerButton);
-        sceneLogin = new Scene(grid, 500,200);
-        sceneLogin.setOnKeyPressed(event -> {
-            if(loginFunk.login(conn, nameInput, passwordInput)==true){
-                try{
-                    //hovedMenuView.startHovedMenu(window);
-                    startHovedMenu(window);
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
-            }else{
-                loginAlert();
-            }
-        });
-
-        window.setScene(sceneLogin);
-        window.show();
-    }
 
     public void startHovedMenu(Stage primaryStage)
     {
@@ -194,7 +115,7 @@ public class Main extends Application
         //Buttons tilføjes til HBox for horisontal placering
         Button tilfoejButton = new Button("Tilføj Deadline");
         tilfoejButton.getStyleClass().add("button-tilfoej");
-        tilfoejButton.setOnAction(e -> popUps.tilføjDeadline("Tilføj Deadline", "Lort"));
+        tilfoejButton.setOnAction(e -> PopUps.tilføjDeadline("Tilføj Deadline", "Lort"));
 
         Button fjernButton = new Button("Fjern Deadline");
         fjernButton.getStyleClass().add("button-fjern");
@@ -295,16 +216,16 @@ public class Main extends Application
 
         Button opdaterBeboerButton = new Button("Opdater\nBeboerInfo");
         opdaterBeboerButton.getStyleClass().add("button-opdater-medlem");
-        opdaterBeboerButton.setOnAction(e -> popUps.opdaterBeboerInfo(conn));
+        //opdaterBeboerButton.setOnAction(e -> PopUps.opdaterBeboerInfo(conn));
         opdaterBeboerButton.setPrefSize(172, 105);
 
         Button påbegyndStudiekontrolButton = new Button("Påbegynd\nstudiekontrol");
         påbegyndStudiekontrolButton.getStyleClass().add("button-paabegynd-studiekontrol");
-        påbegyndStudiekontrolButton.setOnAction(e -> popUps.påbegyndStudieKontrol("Påbegynd Studiekontrol"));
+        //påbegyndStudiekontrolButton.setOnAction(e -> PopUps.påbegyndStudieKontrol("Påbegynd Studiekontrol"));
 
         Button redigerAfslutStudiekontrolButton = new Button("Rediger/afslut\nStudiekontrol");
         redigerAfslutStudiekontrolButton.getStyleClass().add("button-rediger-afslut-studiekontrol");
-        redigerAfslutStudiekontrolButton.setOnAction(e -> popUps.redigerAfslutStudiekontrol("button-rediger-afslut-studiekontrol"));
+        //redigerAfslutStudiekontrolButton.setOnAction(e -> PopUps.redigerAfslutStudiekontrol("button-rediger-afslut-studiekontrol"));
         redigerAfslutStudiekontrolButton.setPrefSize(172, 105);
 
         //menubar and Menu
@@ -376,11 +297,11 @@ public class Main extends Application
         Button opretNyBeboerButton = new Button("Opret ny\nbeboer");
         opretNyBeboerButton.getStyleClass().add("button-opdater-medlem");
         opretNyBeboerButton.setMinWidth(150);
-        opretNyBeboerButton.setOnAction(e -> popUps.opretBeboer(conn, beboerListe, beboerData));
+        opretNyBeboerButton.setOnAction(e -> PopUps.opretBeboer(conn, beboerListe, beboerData));
 
         Button opdaterBeboerButton2 = new Button("Opdater \nBeboerinfo");
         opdaterBeboerButton2.getStyleClass().add("button-paabegynd-studiekontrol");
-        opdaterBeboerButton2.setOnAction(e -> popUps.opdaterBeboerInfo(conn));
+        opdaterBeboerButton2.setOnAction(e -> PopUps.opdaterBeboerInfo(conn));
 
         //menubar and Menu
         Menu menuHelpBeboerListe = new Menu("_Hjælp");
@@ -857,10 +778,6 @@ public class Main extends Application
         return beboerListe;
 
     }
-
-    /**
-     * @return
-     */
     public TableView visAlleBeboer()
     {
         beboerListe = new TableView<>();
@@ -935,6 +852,5 @@ public class Main extends Application
         beboerListe.getColumns().addAll(værelseBeboerListe, navnBeboerListe, indflytningsdatoBeboerliste, institutionBeboerListe, påbegyndtUddannelseBeboerListe, uddannelseAfsluttesBeboerListe, uddannelsesRetningBeboerListe, emailBeboerListe);
 
     }
-
+*/
 }
-

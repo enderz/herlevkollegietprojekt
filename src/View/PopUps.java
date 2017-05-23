@@ -21,12 +21,12 @@ import java.util.*;
 
 public class PopUps
 {
-    static PreparedStatement preparedStatement;
-    static Connection conn;
-    static ResultSet resultSet;
-    static HovedMenuFunktion hovedMenuFunktion = new HovedMenuFunktion();
+    PreparedStatement preparedStatement;
+    Connection conn;
+    ResultSet resultSet;
+    HovedMenuFunktion hovedMenuFunktion = new HovedMenuFunktion();
 
-    public static void tilføjDeadline(String title, String message)
+    public void tilføjDeadline(String title, String message)
     {
         Stage window = new Stage();
 
@@ -76,7 +76,7 @@ public class PopUps
      * Created by Janus on 07-02-2017.
      */
 
-    public static void opretBeboer(Connection conn, TableView<Beboer> beboerListe, ObservableList<Beboer> beboerData) {
+    public void opretBeboer(Connection conn, TableView<Beboer> beboerListe, ObservableList<Beboer> beboerData) {
 
         Stage window = new Stage();
 
@@ -139,9 +139,11 @@ public class PopUps
                 }
                 beboerOkAlert();
                 try{
-                    hovedMenuFunktion.opdatereBeboerListe();
+                    //hovedMenuFunktion.opdatereBeboerListe(beboerData);
+                    System.out.println("tableview skal opdateres samtidig her i GUI !!!");
                 }catch (NullPointerException ex){
                     ex.printStackTrace();
+                    System.out.println(ex);
                 }
                 window.close();
 
@@ -163,14 +165,14 @@ public class PopUps
         window.showAndWait();
 
     }
-    public static void beboerOkAlert() {
+    public void beboerOkAlert() {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setHeaderText(null);
         alert.setTitle("Beboer Info");
         alert.setContentText("Beboer oprettet korrekt.");
         alert.show();
     }
-    public static void beboerOpdateretOKAlert(){
+    public void beboerOpdateretOKAlert(){
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setHeaderText(null);
         alert.setTitle("Beboer Opdatering Info");
@@ -178,16 +180,21 @@ public class PopUps
         alert.show();
     }
 
-    public static void opdaterBeboerInfo(Connection conn) {
+    public void opdaterBeboerInfo(Connection conn) {
         Stage window = new Stage();
 
         window.initModality(Modality.APPLICATION_MODAL);
         window.setTitle("Opdater aktuelle beboer");
         window.setMinWidth(250);
 
-        Label labelImporterBeboerInfo = new Label("Indtast Værelsesnummer");
-        TextField textFindVærelse = new TextField();
-        textFindVærelse.getStyleClass().add("text-field-hent-beboer-info");
+        Label labelVærelse = new Label("Værelse:");
+        Label labelNavn = new Label("Navn:");
+        Label labelIndflytning = new Label("Indlfytning:");
+        Label labelUddannelsesInstitution = new Label("Uddannelsesinstitution:");
+        Label labelUddannelsesRetning = new Label("Uddannelsesretning:");
+        Label labelUddannelsePåbegyndt = new Label("Uddannelse påbegyndt:");
+        Label labelUddannelseForventesAfsluttet = new Label("Uddannelse forventes afsluttet:");
+        Label labelEmail = new Label("Email:");
 
         TextField textVærelse = new TextField();
         TextField textNavn = new TextField();
@@ -197,6 +204,10 @@ public class PopUps
         TextField textUddannelseForventesAfsluttet = new TextField();
         TextField textUddannelsesRetning = new TextField();
         TextField textEmail = new TextField();
+
+        Label labelImporterBeboerInfo = new Label("Indtast Værelsesnummer");
+        TextField textFindVærelse = new TextField();
+        textFindVærelse.getStyleClass().add("text-field-hent-beboer-info");
 
         Button hentBeboerInfoButton = new Button("Hent\nBeboer\nInfo");
         hentBeboerInfoButton.getStyleClass().add("button-hent-beboer-info");
@@ -228,15 +239,6 @@ public class PopUps
         Separator separator = new Separator();
         separator.setValignment(VPos.CENTER);
         separator.setPrefSize(450, 40);
-
-        Label labelVærelse = new Label("Værelse:");
-        Label labelNavn = new Label("Navn:");
-        Label labelIndflytning = new Label("Indlfytning:");
-        Label labelUddannelsesInstitution = new Label("Uddannelsesinstitution:");
-        Label labelUddannelsesRetning = new Label("Uddannelsesretning:");
-        Label labelUddannelsePåbegyndt = new Label("Uddannelse påbegyndt:");
-        Label labelUddannelseForventesAfsluttet = new Label("Uddannelse forventes afsluttet:");
-        Label labelEmail = new Label("Email:");
 
         Button buttonFortryd = new Button("Fortryd");
         buttonFortryd.setOnAction(e -> window.close());
@@ -295,7 +297,7 @@ public class PopUps
         window.showAndWait();
     }
 
-    public static void påbegyndStudieKontrol(String title) {
+    public void påbegyndStudieKontrol(String title) {
         Stage window = new Stage();
 
         window.initModality(Modality.APPLICATION_MODAL);
@@ -349,7 +351,7 @@ public class PopUps
         window.setScene(scene);
         window.showAndWait();
     }
-    public static void redigerAfslutStudiekontrol(String title)
+    public void redigerAfslutStudiekontrol(String title)
     {
         Stage window = new Stage();
 

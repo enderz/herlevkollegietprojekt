@@ -29,7 +29,7 @@ public class HovedMenuFunktion {
     ResultSet resultSet;
     Connection conn;
 
-    public void opdatereBeboerListe(){
+   public void opdatereBeboerListe(ObservableList<Beboer> beboerData){
             beboerData.clear();
             try{
                 String sql = "SELECT * FROM Beboer";
@@ -48,7 +48,9 @@ public class HovedMenuFunktion {
                             resultSet.getString("Uddannelseretning"),
                             resultSet.getString("Email")
                     ));
+                    beboerListe.refresh();
                     beboerListe.setItems(beboerData);
+
                 }
                 preparedStatement.close();
                 resultSet.close();
@@ -58,6 +60,7 @@ public class HovedMenuFunktion {
 
 
     }
+
     public ObservableList<Beboer> getBeboer() {
         ObservableList<Beboer> beboer = FXCollections.observableArrayList();
         return beboer;
@@ -65,7 +68,8 @@ public class HovedMenuFunktion {
 
     public void visTableView(TableView beboerListe){
 
-        opdatereBeboerListe();
+        opdatereBeboerListe(beboerData);
+
         TableColumn<Beboer, Integer> værelseBeboerListe = new TableColumn<>("Vaerelse");
         værelseBeboerListe.setMinWidth(100);
         værelseBeboerListe.setCellValueFactory(new PropertyValueFactory<>("vaerelseNr"));//Property need to match the class's field names
@@ -102,7 +106,6 @@ public class HovedMenuFunktion {
         beboerListe.getColumns().addAll(værelseBeboerListe, navnBeboerListe, indflytningsdatoBeboerliste, institutionBeboerListe, påbegyndtUddannelseBeboerListe, uddannelseAfsluttesBeboerListe, uddannelsesRetningBeboerListe, emailBeboerListe);
 
     }
-
     public void beboerOkAlert() {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setHeaderText(null);
