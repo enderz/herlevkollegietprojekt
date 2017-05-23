@@ -6,6 +6,7 @@ import java.util.Date;
  * Created by Janus on 15-05-2017.
  */
 public class VaerelsesUdlejning {
+
     private int værelse;
     private Date udlejningsdato;
     private Date behandlingsdato;

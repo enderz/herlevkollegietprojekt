@@ -71,7 +71,6 @@ public class PopUps
 
         window.setScene(scene);
         window.showAndWait();
-
     }
 
     /**
@@ -140,7 +139,7 @@ public class PopUps
                 }
                 beboerOkAlert();
                 try{
-                    hovedMenuFunktion.opdatereBeboerListe(conn);
+                    hovedMenuFunktion.opdatereBeboerListe();
                 }catch (NullPointerException ex){
                     ex.printStackTrace();
                 }
@@ -169,6 +168,13 @@ public class PopUps
         alert.setHeaderText(null);
         alert.setTitle("Beboer Info");
         alert.setContentText("Beboer oprettet korrekt.");
+        alert.show();
+    }
+    public static void beboerOpdateretOKAlert(){
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setHeaderText(null);
+        alert.setTitle("Beboer Opdatering Info");
+        alert.setContentText("Beboer er opdateret korrekt.");
         alert.show();
     }
 
@@ -240,16 +246,10 @@ public class PopUps
         buttonOpdaterBeboer.setPadding(new Insets(20));
         buttonOpdaterBeboer.setOnAction(e -> {
             try{
-                Statement stmt = null;
-                String updateSql = "UPDATE Beboer SET VaerelseNr="+textVærelse.getText()+",Navn="+textNavn.getText()+
-                        ",Indflytningsdato="+textIndflytning.getText()+",Uddannelsested="+textUddannelsesInstitution.getText()+
-                        ",Uddanelsesstart="+textUddannelsePåbegyndt.getText()+",Uddannelseafsluttes="+textUddannelseForventesAfsluttet.getText()+
-                        ",Uddannelseretning="+textUddannelsesRetning.getText()+",Email="+textEmail.getText()+
-                        "WHERE VaerelseNr="+textFindVærelse.getText();
+                String updateSql = "UPDATE Beboer SET VaerelseNr = ?, Navn = ?, Indflytningsdato = ?, Uddannelsested = ?, Uddanelsesstart = ?," +
+                            "Uddannelseafsluttes = ?, Uddannelseretning = ?, Email = ? WHERE VaerelseNr="+textFindVærelse.getText();
 
                 preparedStatement = conn.prepareStatement(updateSql);
-                //resultSet = preparedStatement.execute();
-
                 preparedStatement.setString(1, textVærelse.getText());
                 preparedStatement.setString(2, textNavn.getText());
                 preparedStatement.setString(3, textIndflytning.getText());
@@ -259,8 +259,9 @@ public class PopUps
                 preparedStatement.setString(7, textUddannelsesRetning.getText());
                 preparedStatement.setString(8, textEmail.getText());
 
-                preparedStatement.execute();
+                preparedStatement.executeUpdate();
                 preparedStatement.close();
+                beboerOpdateretOKAlert();
                 window.close();
             }catch (SQLException sqle){
                 sqle.printStackTrace();

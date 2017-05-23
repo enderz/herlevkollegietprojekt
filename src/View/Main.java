@@ -1,5 +1,6 @@
 package View;
 
+import Controller.HovedMenuFunktion;
 import Model.*;
 import Controller.LoginFunktion;
 
@@ -840,9 +841,9 @@ public class Main extends Application
         beboerListe = new TableView<>();
         final ObservableList<Beboer> beboerData = FXCollections.observableArrayList();
 
+        beboerData.clear();
         visTableView(beboerListe);
 
-        beboerData.clear();
         try{
             String sql = "SELECT * FROM Beboer";
             preparedStatement = conn.prepareStatement(sql);

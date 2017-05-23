@@ -6,6 +6,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -24,8 +25,9 @@ public class HovedMenuFunktion {
     ResultSet resultSet;
     Connection conn;
 
-    public void opdatereBeboerListe(){
 
+
+    public void opdatereBeboerListe(){
             beboerData.clear();
             try{
                 String sql = "SELECT * FROM Beboer";
@@ -61,6 +63,7 @@ public class HovedMenuFunktion {
 
     public void visTableView(TableView beboerListe){
 
+        opdatereBeboerListe();
         TableColumn<Beboer, Integer> værelseBeboerListe = new TableColumn<>("Vaerelse");
         værelseBeboerListe.setMinWidth(100);
         værelseBeboerListe.setCellValueFactory(new PropertyValueFactory<>("vaerelseNr"));//Property need to match the class's field names
