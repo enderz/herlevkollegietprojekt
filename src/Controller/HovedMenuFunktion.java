@@ -23,18 +23,23 @@ import java.util.Date;
  */
 public class HovedMenuFunktion {
 
-    TableView<Beboer> beboerListe = new TableView<>();
-    final ObservableList<Beboer> beboerData = FXCollections.observableArrayList();
+    TableView<Beboer> beboerListe;
+    //final ObservableList<Beboer> beboerData = FXCollections.observableArrayList();
     PreparedStatement preparedStatement;
     ResultSet resultSet;
     Connection conn;
 
-   public void opdatereBeboerListe(ObservableList<Beboer> beboerData){
-            beboerData.clear();
-            try{
-                String sql = "SELECT * FROM Beboer";
-                preparedStatement = conn.prepareStatement(sql);
-                resultSet = preparedStatement.executeQuery();
+   public TableView opdatereBeboerListe(){
+
+       beboerListe = new TableView<>();
+       final ObservableList<Beboer> beboerData = FXCollections.observableArrayList();
+
+       beboerData.clear();
+       visTableView(beboerListe);
+       try{
+           String sql = "SELECT * FROM Beboer";
+           preparedStatement = conn.prepareStatement(sql);
+           resultSet = preparedStatement.executeQuery();
 
                 while(resultSet.next())
                 {
@@ -48,27 +53,22 @@ public class HovedMenuFunktion {
                             resultSet.getString("Uddannelseretning"),
                             resultSet.getString("Email")
                     ));
-                    beboerListe.refresh();
                     beboerListe.setItems(beboerData);
 
                 }
-                preparedStatement.close();
-                resultSet.close();
+                //preparedStatement.close();
+                //resultSet.close();
             }catch (SQLException e){
                 e.printStackTrace();
             }
-
-
+            return beboerListe;
     }
 
     public ObservableList<Beboer> getBeboer() {
         ObservableList<Beboer> beboer = FXCollections.observableArrayList();
         return beboer;
     }
-
     public void visTableView(TableView beboerListe){
-
-        opdatereBeboerListe(beboerData);
 
         TableColumn<Beboer, Integer> værelseBeboerListe = new TableColumn<>("Vaerelse");
         værelseBeboerListe.setMinWidth(100);

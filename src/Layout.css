@@ -25,11 +25,6 @@
     -fx-background-size: 200px;
 }
 
-.button-logout{
-    -fx-background-size: 22pt;
-    -fx-font-size: 20pt;
-    -fx-padding: 10pt;
-}
 .button-hovedmenu{
     -fx-background-size: 22pt;
     -fx-font-size: 20pt;
@@ -176,8 +171,55 @@
 }
 .button-klage{
     -fx-font-weight: bolder;
-    -fx-background-color: linear-gradient(blue, darkblue);
+    -fx-background-color: blue;
     -fx-text-fill: white;
     -fx-padding: 5pt;
     -fx-font-size: 25pt;
+}
+.button-klage:hover{
+    -fx-font-weight: bolder;
+    -fx-background-color: linear-gradient(blue, darkblue);
+    -fx-text-fill: white;
+}
+
+.button-tilfoej-til-protokol{
+    -fx-background-size: 50pt;
+    -fx-font-weight: bolder;
+    -fx-background-color: green;
+    -fx-text-fill: white;
+    -fx-font-size: 14pt;
+}
+.button-tilfoej-til-protokol:hover{
+    -fx-background-color: linear-gradient(green,forestgreen);
+    -fx-text-fill: whitesmoke;
+}
+.button-rediger-i-protokol{
+    -fx-background-size: 50pt;
+    -fx-font-weight: bolder;
+    -fx-background-color: red;
+    -fx-text-fill: white;
+    -fx-font-size: 14pt;
+    -fx-padding: 20pt;
+}
+.button-rediger-i-protokol:hover{
+    -fx-background-color: linear-gradient(red,darkred);
+    -fx-text-fill: whitesmoke;
+}
+.label-skabeloner{
+    -fx-font-size: 18pt;
+    -fx-font-weight: bold;
+}
+.button-skabeloner{
+    -fx-background-color: darkgray;
+    -fx-background-radius: 0pt;
+    -fx-text-fill: black;
+    -fx-font-weight: bold;
+    -fx-border-color: black;
+    -fx-min-width: 400pt;
+    -fx-alignment: bottom-left;
+}
+.button-skabeloner:hover{
+    -fx-font-weight: bolder;
+    -fx-background-color: linear-gradient(darkgray, lightgray);
+
 }
