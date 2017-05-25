@@ -236,7 +236,7 @@ public class HovedMenuView
         //TableView med beboerinformationer
 
         TableView<Beboer> studiekontrolBeboerListe = new TableView<>();
-        visTableView(studiekontrolBeboerListe);
+        visBeboerTableView(studiekontrolBeboerListe);
 
         //Center Layout of StudiekontrolMenu
         TabPane centerLayout = new TabPane();
@@ -309,7 +309,7 @@ public class HovedMenuView
         MenuBar menuBarbeboerListe = new MenuBar(menuVisBeboerliste, menuHelpBeboerListe);
 
         //TableView med beboerinformationer
-        visTableView(beboerListe);
+        visBeboerTableView(beboerListe);
 
         //Center Layout of BeboerListeMenu
         TabPane centerBeboerlisteLayout = new TabPane();
@@ -608,7 +608,7 @@ public class HovedMenuView
         TableView<Beboer> beboerListe = new TableView<>();
         final ObservableList<Beboer> beboerData = FXCollections.observableArrayList();
 
-        visTableView(beboerListe);
+        visBeboerTableView(beboerListe);
 
         beboerData.clear();
         try{
@@ -643,7 +643,7 @@ public class HovedMenuView
         TableView<Beboer> beboerListe = new TableView<>();
         final ObservableList<Beboer> beboerData = FXCollections.observableArrayList();
 
-        visTableView(beboerListe);
+        visBeboerTableView(beboerListe);
 
         beboerData.clear();
         try{
@@ -678,7 +678,7 @@ public class HovedMenuView
         TableView<Beboer> beboerListe = new TableView<>();
         final ObservableList<Beboer> beboerData = FXCollections.observableArrayList();
 
-        visTableView(beboerListe);
+        visBeboerTableView(beboerListe);
 
         beboerData.clear();
         try{
@@ -713,7 +713,7 @@ public class HovedMenuView
         TableView<Beboer> beboerListe = new TableView<>();
         final ObservableList<Beboer> beboerData = FXCollections.observableArrayList();
 
-        visTableView(beboerListe);
+        visBeboerTableView(beboerListe);
 
         beboerData.clear();
         try{
@@ -748,7 +748,7 @@ public class HovedMenuView
         TableView<Beboer> beboerListe = new TableView<>();
         final ObservableList<Beboer> beboerData = FXCollections.observableArrayList();
 
-        visTableView(beboerListe);
+        visBeboerTableView(beboerListe);
 
         beboerData.clear();
         try{
@@ -784,7 +784,7 @@ public class HovedMenuView
         final ObservableList<Beboer> beboerData = FXCollections.observableArrayList();
 
         beboerData.clear();
-        visTableView(beboerListe);
+        visBeboerTableView(beboerListe);
 
         try{
             String sql = "SELECT * FROM Beboer";
@@ -814,7 +814,7 @@ public class HovedMenuView
 
     }
     // Viser tabledview med alle bebeor informationer.
-    public void visTableView(TableView beboerListe){
+    public void visBeboerTableView(TableView beboerListe){
 
         TableColumn<Beboer, Integer> værelseBeboerListe = new TableColumn<>("Vaerelse");
         værelseBeboerListe.setMinWidth(100);

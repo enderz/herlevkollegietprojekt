@@ -1,6 +1,6 @@
 package View;
 
-import Controller.HovedMenuFunktion;
+import Controller.TestController;
 import Model.*;
 import Controller.LoginFunktion;
 
@@ -9,9 +9,6 @@ import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -22,7 +19,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import java.sql.*;
@@ -46,6 +42,7 @@ public class Main extends Application
     TableView<Beboer> beboerListe;
     final ObservableList<Beboer> beboerData = FXCollections.observableArrayList();
     //HovedMenuView hovedMenuView = new HovedMenuView();
+    TestController testController = new TestController();
 
     public static void main(String[] args)
     {
@@ -156,7 +153,7 @@ public class Main extends Application
         indstillingsSkabelonerButton.setOnAction(e-> window.setScene(sceneIndstillingsskabeloner));
 
         Button logoutButton = new Button("Log ud");
-        logoutButton.getStyleClass().add("button-logout");
+        logoutButton.getStyleClass().add("button-hovedmenu");
         logoutButton.setOnAction(e ->{
             try {
                 logoutAlert();
@@ -315,7 +312,7 @@ public class Main extends Application
         //TableView med beboerinformationer
 
         TableView<Beboer> studiekontrolBeboerListe = new TableView<>();
-        visTableView(studiekontrolBeboerListe);
+        visBeboerTableView(studiekontrolBeboerListe);
 
         //Center Layout of StudiekontrolMenu
         TabPane centerLayout = new TabPane();
@@ -376,9 +373,11 @@ public class Main extends Application
         Button opretNyBeboerButton = new Button("Opret ny\nbeboer");
         opretNyBeboerButton.getStyleClass().add("button-opdater-medlem");
         opretNyBeboerButton.setMinWidth(150);
-        opretNyBeboerButton.setOnAction(event -> {popUps.opretBeboer(conn, beboerListe, beboerData);
-        });
+        opretNyBeboerButton.setOnAction(event -> {
+            popUps.opretBeboer(conn, beboerListe, beboerData);
+            //testController.opretBeboerButtonClick();
 
+        });
         Button opdaterBeboerButton2 = new Button("Opdater \nBeboerinfo");
         opdaterBeboerButton2.getStyleClass().add("button-paabegynd-studiekontrol");
         opdaterBeboerButton2.setOnAction(e -> popUps.opdaterBeboerInfo(conn));
@@ -389,7 +388,7 @@ public class Main extends Application
         MenuBar menuBarbeboerListe = new MenuBar(menuVisBeboerliste, menuHelpBeboerListe);
 
         //TableView med beboerinformationer
-        visTableView(beboerListe);
+        visBeboerTableView(beboerListe);
 
         //Center Layout of BeboerListeMenu
         TabPane centerBeboerlisteLayout = new TabPane();
@@ -414,7 +413,6 @@ public class Main extends Application
         //Left Layout of beboerListeMenu
         VBox leftBeboerListeLayout = new VBox(10, button2);
         leftBeboerListeLayout.setPadding(new Insets(10));
-
 
         //Right Layout of beboerlistemenu
         VBox rightBeboerListeLayout = new VBox(15, opretNyBeboerButton, opdaterBeboerButton2);
@@ -480,38 +478,8 @@ public class Main extends Application
         Label dispensationLayoutLabel = new Label("Igangværende og kommende dispensationer: ");
         dispensationLayoutLabel.getStyleClass().add("label-hovedmenu");
 
-        TableColumn<Dispensation, Integer> værelseDispensation = new TableColumn<>("Værelse");
-        værelseDispensation.setMaxWidth(70);
-        værelseDispensation.setCellValueFactory(new PropertyValueFactory<>("værelse"));//Property need to match the class's field names
-
-        TableColumn<Dispensation, String> navnDispensation = new TableColumn<>("Navn");
-        navnDispensation.setMaxWidth(200);
-        navnDispensation.setCellValueFactory(new PropertyValueFactory<>("navn"));//Property need to match the class's field names
-
-        TableColumn<Dispensation, Date> startDatoDispensation = new TableColumn<>("Dispensation\nstarter d.");
-        startDatoDispensation.setMaxWidth(100);
-        startDatoDispensation.setCellValueFactory(new PropertyValueFactory<>("startDato"));//Property need to match the class's field names
-
-        TableColumn<Dispensation, String> deadline1Dispensation = new TableColumn<>("Deadline 1");
-        deadline1Dispensation.setMaxWidth(250);
-        deadline1Dispensation.setCellValueFactory(new PropertyValueFactory<>("deadline1"));//Property need to match the class's field names
-
-        TableColumn<Dispensation, String> deadline2Dispensation = new TableColumn<>("Deadline 2");
-        deadline2Dispensation.setMaxWidth(250);
-        deadline2Dispensation.setCellValueFactory(new PropertyValueFactory<>("deadline2"));//Property need to match the class's field names
-
-        TableColumn<Dispensation, String> deadline3Dispensation = new TableColumn<>("Deadline 3");
-        deadline3Dispensation.setMaxWidth(250);
-        deadline3Dispensation.setCellValueFactory(new PropertyValueFactory<>("deadline3"));//Property need to match the class's field names
-
-        TableColumn<Dispensation, Date> ophørsDatoDispensation = new TableColumn<>("Dispensation\nOphører d.");
-        ophørsDatoDispensation.setMaxWidth(100);
-        ophørsDatoDispensation.setCellValueFactory(new PropertyValueFactory<>("ophørsDato"));//Property need to match the class's field names
-
-        TableView dispensationsView = new TableView();
-        dispensationsView.setItems(getDispensation());
-        dispensationsView.getColumns().addAll(værelseDispensation,navnDispensation,startDatoDispensation,deadline1Dispensation, deadline2Dispensation, deadline3Dispensation, ophørsDatoDispensation);
-        dispensationsView.setMaxSize(1080, 400);
+        TableView<Dispensation> dispensationsView = new TableView<>();
+        visDispensationsTableView(dispensationsView);
 
         VBox dispensationsTabMainLayout = new VBox(10, dispensationLayoutLabel, dispensationsView, dispensationTabCenterLayout);
         dispensationsTabMainLayout.setPadding(new Insets(20));
@@ -924,7 +892,7 @@ public class Main extends Application
         TableView<Beboer> beboerListe = new TableView<>();
         final ObservableList<Beboer> beboerData = FXCollections.observableArrayList();
 
-        visTableView(beboerListe);
+        visBeboerTableView(beboerListe);
 
         beboerData.clear();
         try{
@@ -959,7 +927,7 @@ public class Main extends Application
         TableView<Beboer> beboerListe = new TableView<>();
         final ObservableList<Beboer> beboerData = FXCollections.observableArrayList();
 
-        visTableView(beboerListe);
+        visBeboerTableView(beboerListe);
 
         beboerData.clear();
         try{
@@ -994,7 +962,7 @@ public class Main extends Application
         TableView<Beboer> beboerListe = new TableView<>();
         final ObservableList<Beboer> beboerData = FXCollections.observableArrayList();
 
-        visTableView(beboerListe);
+        visBeboerTableView(beboerListe);
 
         beboerData.clear();
         try{
@@ -1029,7 +997,7 @@ public class Main extends Application
         TableView<Beboer> beboerListe = new TableView<>();
         final ObservableList<Beboer> beboerData = FXCollections.observableArrayList();
 
-        visTableView(beboerListe);
+        visBeboerTableView(beboerListe);
 
         beboerData.clear();
         try{
@@ -1064,7 +1032,7 @@ public class Main extends Application
         TableView<Beboer> beboerListe = new TableView<>();
         final ObservableList<Beboer> beboerData = FXCollections.observableArrayList();
 
-        visTableView(beboerListe);
+        visBeboerTableView(beboerListe);
 
         beboerData.clear();
         try{
@@ -1104,7 +1072,7 @@ public class Main extends Application
         final ObservableList<Beboer> beboerData = FXCollections.observableArrayList();
 
         beboerData.clear();
-        visTableView(beboerListe);
+        visBeboerTableView(beboerListe);
 
         try{
             String sql = "SELECT * FROM Beboer";
@@ -1134,7 +1102,7 @@ public class Main extends Application
 
     }
     // Viser tabledview med alle bebeor informationer.
-    public void visTableView(TableView beboerListe){
+    public void visBeboerTableView(TableView beboerListe){
 
         TableColumn<Beboer, Integer> værelseBeboerListe = new TableColumn<>("Vaerelse");
         værelseBeboerListe.setMinWidth(100);
@@ -1171,6 +1139,40 @@ public class Main extends Application
         beboerListe.setItems(getBeboer());
         beboerListe.getColumns().addAll(værelseBeboerListe, navnBeboerListe, indflytningsdatoBeboerliste, institutionBeboerListe, påbegyndtUddannelseBeboerListe, uddannelseAfsluttesBeboerListe, uddannelsesRetningBeboerListe, emailBeboerListe);
 
+    }
+    public void visDispensationsTableView(TableView<Dispensation> dispensationsView)
+    {
+        TableColumn<Dispensation, Integer> værelseDispensation = new TableColumn<>("Værelse");
+        værelseDispensation.setMaxWidth(70);
+        værelseDispensation.setCellValueFactory(new PropertyValueFactory<>("værelse"));//Property need to match the class's field names
+
+        TableColumn<Dispensation, String> navnDispensation = new TableColumn<>("Navn");
+        navnDispensation.setMaxWidth(200);
+        navnDispensation.setCellValueFactory(new PropertyValueFactory<>("navn"));//Property need to match the class's field names
+
+        TableColumn<Dispensation, Date> startDatoDispensation = new TableColumn<>("Dispensation\nstarter d.");
+        startDatoDispensation.setMaxWidth(100);
+        startDatoDispensation.setCellValueFactory(new PropertyValueFactory<>("startDato"));//Property need to match the class's field names
+
+        TableColumn<Dispensation, String> deadline1Dispensation = new TableColumn<>("Deadline 1");
+        deadline1Dispensation.setMaxWidth(250);
+        deadline1Dispensation.setCellValueFactory(new PropertyValueFactory<>("deadline1"));//Property need to match the class's field names
+
+        TableColumn<Dispensation, String> deadline2Dispensation = new TableColumn<>("Deadline 2");
+        deadline2Dispensation.setMaxWidth(250);
+        deadline2Dispensation.setCellValueFactory(new PropertyValueFactory<>("deadline2"));//Property need to match the class's field names
+
+        TableColumn<Dispensation, String> deadline3Dispensation = new TableColumn<>("Deadline 3");
+        deadline3Dispensation.setMaxWidth(250);
+        deadline3Dispensation.setCellValueFactory(new PropertyValueFactory<>("deadline3"));//Property need to match the class's field names
+
+        TableColumn<Dispensation, Date> ophørsDatoDispensation = new TableColumn<>("Dispensation\nOphører d.");
+        ophørsDatoDispensation.setMaxWidth(100);
+        ophørsDatoDispensation.setCellValueFactory(new PropertyValueFactory<>("ophørsDato"));//Property need to match the class's field names
+
+        dispensationsView.setItems(getDispensation());
+        dispensationsView.getColumns().addAll(værelseDispensation,navnDispensation,startDatoDispensation,deadline1Dispensation, deadline2Dispensation, deadline3Dispensation, ophørsDatoDispensation);
+        dispensationsView.setMaxSize(1080, 400);
     }
 
 }

@@ -542,6 +542,7 @@ public class PopUps
 
         Button fortrydButton2 = new Button("Fortryd");
         fortrydButton.setMinWidth(70);
+        fortrydButton2.setOnAction(e-> window.close());
 
         Button givAfslagDispensationButton = new Button("Opret afslag på\nDispensationsansøgning");
         givAfslagDispensationButton.getStyleClass().add("button-green");
@@ -725,6 +726,7 @@ public class PopUps
 
         Button fortrydButton = new Button("Fortryd");
         fortrydButton.setMinWidth(70);
+        fortrydButton.setOnAction(e->window.close());
 
         Button opretFremlejeButton = new Button("Godkend og opret Fremleje");
         opretFremlejeButton.getStyleClass().add("button-green");
@@ -773,6 +775,7 @@ public class PopUps
 
         Button fortrydButton2 = new Button("Fortryd");
         fortrydButton.setMinWidth(70);
+        fortrydButton2.setOnAction(e->window.close());
 
         Button givAfslagFremlejeButton = new Button("Opret afslag på\nFremlejeansøgning");
         givAfslagFremlejeButton.getStyleClass().add("button-green");
@@ -798,12 +801,10 @@ public class PopUps
         givAfslagPåFremlejeTab.setClosable(false);
         givAfslagPåFremlejeTab.setContent(layoutAfslagPåFremleje);
 
-
         TabPane layout1 = new TabPane();
         layout1.getTabs().addAll(godkendFremlejeTab, givAfslagPåFremlejeTab);
         BorderPane layout = new BorderPane();
         layout.setCenter(layout1);
-
 
         Scene scene = new Scene(layout);
         scene.getStylesheets().add("PopupsLayout.css");
@@ -811,13 +812,13 @@ public class PopUps
         window.showAndWait();
 
     }
-    public static void redigerIFremleje(String title) {
+    public static void redigerIFremleje(String title)
+    {
         Stage window = new Stage();
 
         window.initModality(Modality.APPLICATION_MODAL);
         window.setTitle(title);
         window.setMinWidth(250);
-
 
         //LAYOUT TIL GODKENDT FREMLEJE
         Label overskriftFremlejeLabel1 = new Label("Rediger i Fremleje:");
@@ -883,7 +884,6 @@ public class PopUps
         BorderPane layout = new BorderPane();
         layout.setCenter(layoutGodkendtFremleje);
 
-
         Scene scene = new Scene(layout);
         scene.getStylesheets().add("PopupsLayout.css");
         window.setScene(scene);
@@ -905,8 +905,6 @@ public class PopUps
                 "så skift i toppen af vinduet.\n" +
                 "Omhandler klagen noget andet er der ingen skabelon der kan udfyldes. Denne må laves fra\n" +
                 "bunden. Se evt. under \"Indstillingsskabeloner\"");
-
-
 
         Label beboerensNavnLabel = new Label("Beboerens navn:");
         TextField beboernavnText = new TextField();
@@ -985,7 +983,8 @@ public class PopUps
         TextField formandsNavnTextField2 = new TextField();
 
         Button fortrydButton2 = new Button("Fortryd");
-        fortrydButton.setMinWidth(70);
+        fortrydButton2.setMinWidth(70);
+        fortrydButton2.setOnAction(e->window.close());
 
         Button opretKlageButton2 = new Button("Opret Klage");
         opretKlageButton2.getStyleClass().add("button-green");
@@ -1010,12 +1009,10 @@ public class PopUps
         klageOverUoverensstemmelseIOplysningerTab.setClosable(false);
         klageOverUoverensstemmelseIOplysningerTab.setContent(layoutKlageOverForSenAflevering);
 
-
         TabPane layout1 = new TabPane();
         layout1.getTabs().addAll(klagOverForSenStudiedokumentationTab, klageOverUoverensstemmelseIOplysningerTab);
         BorderPane layout = new BorderPane();
         layout.setCenter(layout1);
-
 
         Scene scene = new Scene(layout);
         scene.getStylesheets().add("PopupsLayout.css");
