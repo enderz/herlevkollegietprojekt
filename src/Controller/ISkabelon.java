@@ -6,7 +6,7 @@ import java.util.ArrayList;
 public interface ISkabelon {
 
         //skal hardcodes
-        public void fillKeywordsArray();
+        void fillKeywordsArray();
 
     }
 

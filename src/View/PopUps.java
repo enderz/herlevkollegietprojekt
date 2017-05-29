@@ -298,6 +298,122 @@ public class PopUps
         window.setScene(scene);
         window.showAndWait();
     }
+    public void opdaterStudieKontrolInfo(Connection conn) {
+        Stage window = new Stage();
+
+        window.initModality(Modality.APPLICATION_MODAL);
+        window.setTitle("Opdater aktuelle beboer");
+        window.setMinWidth(250);
+
+        Label labelVærelse = new Label("Værelse:");
+        Label labelNavn = new Label("Navn:");
+        Label labelIndflytning = new Label("Indlfytning:");
+        Label labelUddannelsesInstitution = new Label("Uddannelsesinstitution:");
+        Label labelUddannelsesRetning = new Label("Uddannelsesretning:");
+        Label labelUddannelsePåbegyndt = new Label("Uddannelse påbegyndt:");
+        Label labelUddannelseForventesAfsluttet = new Label("Uddannelse forventes afsluttet:");
+        Label labelStatus = new Label("Kontrol Status:");
+
+        TextField textVærelse = new TextField();
+        TextField textNavn = new TextField();
+        TextField textIndflytning = new TextField();
+        TextField textUddannelsesInstitution = new TextField();
+        TextField textUddannelsePåbegyndt = new TextField();
+        TextField textUddannelseForventesAfsluttet = new TextField();
+        TextField textUddannelsesRetning = new TextField();
+        TextField textStatus = new TextField();
+
+        Label labelImporterBeboerInfo = new Label("Indtast Værelsesnummer");
+        TextField textFindVærelse = new TextField();
+        textFindVærelse.getStyleClass().add("text-field-hent-beboer-info");
+
+        Button hentBeboerInfoButton = new Button("Hent\nBeboer\nInfo");
+        hentBeboerInfoButton.getStyleClass().add("button-hent-beboer-info");
+        hentBeboerInfoButton.setMinSize(120, 120);
+        hentBeboerInfoButton.setMaxSize(120, 120);
+        hentBeboerInfoButton.setOnAction(e -> {
+            try{
+                String currentSql = "SELECT * FROM StudieKontrol WHERE VaerelseNr ="+textFindVærelse.getText();
+                preparedStatement = conn.prepareStatement(currentSql);
+                resultSet = preparedStatement.executeQuery();
+
+                while(resultSet.next()){
+                    textVærelse.setText(resultSet.getString("VaerelseNr"));
+                    textNavn.setText(resultSet.getString("Navn"));
+                    textIndflytning.setText(resultSet.getString("Indflytningsdato"));
+                    textUddannelsesInstitution.setText(resultSet.getString("Uddannelsesinstution"));
+                    textUddannelsePåbegyndt.setText(resultSet.getString("Uddannelsestart"));
+                    textUddannelseForventesAfsluttet.setText(resultSet.getString("Uddannelseslut"));
+                    textUddannelsesRetning.setText(resultSet.getString("Uddannelseretning"));
+                    textStatus.setText(resultSet.getString("KontrolStatus"));
+                }
+                preparedStatement.close();
+                resultSet.close();
+
+            }catch (SQLException ex){
+                ex.printStackTrace();
+            }
+        });
+        Separator separator = new Separator();
+        separator.setValignment(VPos.CENTER);
+        separator.setPrefSize(450, 40);
+
+        Button buttonFortryd = new Button("Fortryd");
+        buttonFortryd.setOnAction(e -> window.close());
+        buttonFortryd.setPadding(new Insets(20));
+
+        Button buttonOpdaterBeboer = new Button("Opdater Beboer");
+        buttonOpdaterBeboer.setPadding(new Insets(20));
+        buttonOpdaterBeboer.setOnAction(e -> {
+            try{
+                String updateSql = "UPDATE StudieKontrol SET VaerelseNr = ?, Navn = ?, Indflytningsdato = ?, Uddannelsesinstution = ?, Uddannelsestart = ?," +
+                        "Uddannelseslut = ?, Uddannelseretning = ?, KontrolStatus = ? WHERE VaerelseNr="+textFindVærelse.getText();
+
+                preparedStatement = conn.prepareStatement(updateSql);
+                preparedStatement.setString(1, textVærelse.getText());
+                preparedStatement.setString(2, textNavn.getText());
+                preparedStatement.setString(3, textIndflytning.getText());
+                preparedStatement.setString(4, textUddannelsesInstitution.getText());
+                preparedStatement.setString(5, textUddannelsePåbegyndt.getText());
+                preparedStatement.setString(6, textUddannelseForventesAfsluttet.getText());
+                preparedStatement.setString(7, textUddannelsesRetning.getText());
+                preparedStatement.setString(8, textStatus.getText());
+
+                preparedStatement.executeUpdate();
+                preparedStatement.close();
+                beboerOpdateretOKAlert();
+                window.close();
+            }catch (SQLException sqle){
+                sqle.printStackTrace();
+            }
+
+        });
+
+        VBox topLeftLayout = new VBox(10, hentBeboerInfoButton);
+        VBox topRightLayout = new VBox(10, labelImporterBeboerInfo, textFindVærelse);
+        HBox topBottomLayout = new HBox(20, separator);
+
+        BorderPane topLayout = new BorderPane();
+        topLayout.setLeft(topLeftLayout);
+        topLayout.setRight(topRightLayout);
+        topLayout.setBottom(topBottomLayout);
+
+        topLayout.setPadding(new Insets(30));
+        VBox leftLayout = new VBox(14, labelVærelse, labelNavn, labelIndflytning, labelUddannelsesInstitution,labelUddannelsePåbegyndt, labelUddannelseForventesAfsluttet, labelUddannelsesRetning, labelStatus, buttonFortryd);
+        VBox rightLayout = new VBox(10, textVærelse, textNavn, textIndflytning, textUddannelsesInstitution, textUddannelsePåbegyndt, textUddannelseForventesAfsluttet,textUddannelsesRetning, textStatus, buttonOpdaterBeboer);
+
+        BorderPane layout = new BorderPane();
+        layout.setLeft(leftLayout);
+        layout.setRight(rightLayout);
+        layout.setTop(topLayout);
+
+        Scene scene = new Scene(layout);
+        scene.getStylesheets().add("PopupsLayout.css");
+        //scene.setOnKeyPressed(event -> {
+        //            });
+        window.setScene(scene);
+        window.showAndWait();
+    }
 
     public static void påbegyndStudieKontrol(String title) {
         Stage window = new Stage();

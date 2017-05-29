@@ -40,8 +40,9 @@ public class Main extends Application
     PreparedStatement preparedStatement;
     ResultSet resultSet;
     TableView<Beboer> beboerListe;
+    TableView<StudieKontrol> studieKontrolListe;
     final ObservableList<Beboer> beboerData = FXCollections.observableArrayList();
-    //HovedMenuView hovedMenuView = new HovedMenuView();
+
     TestController testController = new TestController();
 
     public static void main(String[] args)
@@ -56,6 +57,7 @@ public class Main extends Application
 
         window = primaryStage;
         window.setTitle("LOG IND - Herlev Kollegiet");
+        window.getIcons().add(new Image("Butterfly1.jpg"));
 
         GridPane grid = new GridPane();
         grid.setStyle("-fx-background-color: #508090;");
@@ -82,6 +84,7 @@ public class Main extends Application
         loginButton.setOnAction((ActionEvent event) -> {
             if(loginFunk.login(conn, nameInput, passwordInput)==true){
                try{
+                   //HovedMenuView hovedMenuView = new HovedMenuView();
                    //hovedMenuView.startHovedMenu(window);
                    startHovedMenu(window);
 
@@ -105,6 +108,7 @@ public class Main extends Application
         sceneLogin.setOnKeyPressed(event -> {
             if(loginFunk.login(conn, nameInput, passwordInput)==true){
                 try{
+                    //HovedMenuView hovedMenuView = new HovedMenuView();
                     //hovedMenuView.startHovedMenu(window);
                     startHovedMenu(window);
                 }catch (Exception e){
@@ -119,6 +123,7 @@ public class Main extends Application
         window.show();
     }
 
+    // HOVEDMENU START
     public void startHovedMenu(Stage primaryStage)
     {
         conn = dbConnection.getDBConnection();
@@ -128,14 +133,14 @@ public class Main extends Application
         window.setTitle("Herlevkollegiets Indstillingsudvalg");
         window.getIcons().add(new Image("Butterfly1.jpg")); // HER SKAL HEKO LOGO VÆRE
 
-        // Start Menu setup!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        //Venstre Del af menuen
-        //Buttons
+        //VENSTRE DEL AF HOVEDMENUEN
+        //Buttons...
         Button studiekontrolButton = new Button("Studiekontrol");
         studiekontrolButton.getStyleClass().add("button-hovedmenu");
-        studiekontrolButton.setOnAction(e -> window.setScene(sceneStudiekontrol));
-
-        beboerListe = new TableView<>();
+        studiekontrolButton.setOnAction(e -> {
+            window.setScene(sceneStudiekontrol);
+            visAlleBeboer();
+        });
 
         Button beboerListeButton = new Button("Beboer-Liste");
         beboerListeButton.getStyleClass().add("button-hovedmenu");
@@ -162,7 +167,7 @@ public class Main extends Application
             }
         });
 
-        //Højre del af menuen
+        //HØJRE DEL AF HOVEDMENUEN
         Label kalenderLabel = new Label("Kalender");
         kalenderLabel.getStyleClass().add("label-hovedmenu");
         //Method displays popupcontent of calendar instead of it being a pop-up.
@@ -253,7 +258,6 @@ public class Main extends Application
         udlejedeVærelserTab.setContent(udlejedeVærelserTableView);
         udlejedeVærelserTab.setClosable(false);
 
-
         TabPane værelsesudlejningTabpane = new TabPane(ledigeVærelserTab, udlejedeVærelserTab);
         værelsesudlejningTabpane.setMaxSize(430,350);
 
@@ -285,14 +289,14 @@ public class Main extends Application
         sceneStart = new Scene(startMenu, 1000, 900);
         sceneStart.getStylesheets().add("Layout.css");
 
-        //StudiekontrolMenu!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        //STUDIEKONTROL-MENUEN
         //Buttons
-        Button button1 = new Button("Tilbage til Menu");
-        button1.setOnAction(e -> window.setScene(sceneStart));
+        Button tilbagebutton1 = new Button("Tilbage til Menu");
+        tilbagebutton1.setOnAction(e -> window.setScene(sceneStart));
 
         Button opdaterBeboerButton = new Button("Opdater\nBeboerInfo");
         opdaterBeboerButton.getStyleClass().add("button-opdater-medlem");
-        opdaterBeboerButton.setOnAction(e -> popUps.opdaterBeboerInfo(conn));
+        opdaterBeboerButton.setOnAction(e -> popUps.opdaterStudieKontrolInfo(conn));
         opdaterBeboerButton.setPrefSize(172, 105);
 
         Button påbegyndStudiekontrolButton = new Button("Påbegynd\nstudiekontrol");
@@ -309,14 +313,12 @@ public class Main extends Application
         Menu menuVis = new Menu("_Vis");
         MenuBar menuBar = new MenuBar(menuVis, menuHelp);
 
-        //TableView med beboerinformationer
-
-        TableView<Beboer> studiekontrolBeboerListe = new TableView<>();
-        visBeboerTableView(studiekontrolBeboerListe);
-
+        //TableView med studiekontrol informationer
+        studieKontrolListe = new TableView<>();
         //Center Layout of StudiekontrolMenu
         TabPane centerLayout = new TabPane();
         centerLayout.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
+
         Tab tabAlle = new Tab("Igangværende\nStudiekontroller");
         Tab tab1 = new Tab("Januar");
         Tab tab2 = new Tab("Februar");
@@ -330,14 +332,15 @@ public class Main extends Application
         Tab tab10 = new Tab("Oktober");
         Tab tab11 = new Tab("November");
         Tab tab12 = new Tab("December");
+
         centerLayout.setTabMinWidth(60);
-        tabAlle.setContent(studiekontrolBeboerListe);
+        tabAlle.setContent(visStudieKontrolBeboer());
 
         tabAlle.getStyleClass().add("tab-studiekontrol");
         centerLayout.getTabs().addAll(tabAlle, tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8, tab9, tab10, tab11, tab12);
 
         //Left Layout of StudiekontrolMenu
-        VBox leftLayout = new VBox(10, button1);
+        VBox leftLayout = new VBox(10, tilbagebutton1);
         leftLayout.setPadding(new Insets(10));
 
 
@@ -367,8 +370,8 @@ public class Main extends Application
 
         //BEBOERLISTE MENU
         //Buttons
-        Button button2 = new Button("Tilbage til Menu");
-        button2.setOnAction(e -> window.setScene(sceneStart));
+        Button tilbageButton2 = new Button("Tilbage til Menu");
+        tilbageButton2.setOnAction(e -> window.setScene(sceneStart));
 
         Button opretNyBeboerButton = new Button("Opret ny\nbeboer");
         opretNyBeboerButton.getStyleClass().add("button-opdater-medlem");
@@ -388,7 +391,7 @@ public class Main extends Application
         MenuBar menuBarbeboerListe = new MenuBar(menuVisBeboerliste, menuHelpBeboerListe);
 
         //TableView med beboerinformationer
-        visBeboerTableView(beboerListe);
+        beboerListe = new TableView<>();
 
         //Center Layout of BeboerListeMenu
         TabPane centerBeboerlisteLayout = new TabPane();
@@ -411,7 +414,7 @@ public class Main extends Application
         centerBeboerlisteLayout.getTabs().addAll(tabAlleBeboere, tab2Sal, tab3Sal, tab4Sal, tab5Sal, tab6Sal);
 
         //Left Layout of beboerListeMenu
-        VBox leftBeboerListeLayout = new VBox(10, button2);
+        VBox leftBeboerListeLayout = new VBox(10, tilbageButton2);
         leftBeboerListeLayout.setPadding(new Insets(10));
 
         //Right Layout of beboerlistemenu
@@ -836,7 +839,7 @@ public class Main extends Application
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setHeaderText(null);
         alert.setTitle("Login Status");
-        alert.setContentText("Login Failed. Try again.");
+        alert.setContentText("Login Fejlet!\nBruger findes ikke. Prøv igen.");
         alert.show();
     }
     private void logoutAlert(){
@@ -885,6 +888,10 @@ public class Main extends Application
         ObservableList<Protokol> protokol = FXCollections.observableArrayList();
         protokol.add(new Protokol(new Date(2017, 5,15), "Jessica","Mathias","Janus","Peter","Natali"));
         return protokol;
+    }
+    public ObservableList<StudieKontrol> getStudieKontrol(){
+        ObservableList<StudieKontrol> studieKontrol = FXCollections.observableArrayList();
+        return  studieKontrol;
     }
 
     public TableView visAndenSal()
@@ -1063,6 +1070,41 @@ public class Main extends Application
 
     }
 
+    public TableView visStudieKontrolBeboer()
+    {
+        studieKontrolListe = new TableView<>();
+        final ObservableList<StudieKontrol> studieKontrolData = FXCollections.observableArrayList();
+
+        studieKontrolData.clear();
+        visStudieKontrolTableView(studieKontrolListe);
+
+        try{
+            String sql = "SELECT * FROM StudieKontrol";
+            preparedStatement = conn.prepareStatement(sql);
+            resultSet = preparedStatement.executeQuery();
+
+            while(resultSet.next())
+            {
+                studieKontrolData.add(new StudieKontrol(
+                        resultSet.getInt("VaerelseNr"),
+                        resultSet.getString("Navn"),
+                        resultSet.getDate("Indflytningsdato"),
+                        resultSet.getString("Uddannelsesinstution"),
+                        resultSet.getDate("Uddannelsestart"),
+                        resultSet.getDate("Uddannelseslut"),
+                        resultSet.getString("Uddannelseretning"),
+                        resultSet.getString("KontrolStatus")
+                ));
+                studieKontrolListe.setItems(studieKontrolData);
+            }
+            //preparedStatement.close();
+            //resultSet.close();
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+        return studieKontrolListe;
+
+    }
     /**
      * @return
      */
@@ -1099,6 +1141,44 @@ public class Main extends Application
             e.printStackTrace();
         }
         return beboerListe;
+
+    }
+    public void visStudieKontrolTableView(TableView studieKontrolListe){
+
+        TableColumn<StudieKontrol, Integer> værelseBeboerListe = new TableColumn<>("Vaerelse");
+        værelseBeboerListe.setMinWidth(100);
+        værelseBeboerListe.setCellValueFactory(new PropertyValueFactory<>("vaerelseNr"));//Property need to match the class's field names
+
+        TableColumn<StudieKontrol, String> navnBeboerListe = new TableColumn<>("Navn");
+        navnBeboerListe.setMinWidth(100);
+        navnBeboerListe.setCellValueFactory(new PropertyValueFactory<>("navn"));//Property need to match the class's field names
+
+        TableColumn<StudieKontrol, Date> indflytningsdatoBeboerliste = new TableColumn<>("Indflytningsdato");
+        indflytningsdatoBeboerliste.setMinWidth(100);
+        indflytningsdatoBeboerliste.setCellValueFactory(new PropertyValueFactory<>("indflytdato"));//Property need to match the class's field names
+
+        TableColumn<StudieKontrol, String> institutionBeboerListe = new TableColumn<>("Uddannelses-\ninstitution");
+        institutionBeboerListe.setMinWidth(100);
+        institutionBeboerListe.setCellValueFactory(new PropertyValueFactory<>("uddannelsested"));//Property need to match the class's field names
+
+        TableColumn<StudieKontrol, Date> påbegyndtUddannelseBeboerListe = new TableColumn<>("Uddannelse\nPåbegyndt:");
+        påbegyndtUddannelseBeboerListe.setMinWidth(100);
+        påbegyndtUddannelseBeboerListe.setCellValueFactory(new PropertyValueFactory<>("uddannelsestart"));//Property need to match the class's field names
+
+        TableColumn<StudieKontrol, Date> uddannelseAfsluttesBeboerListe = new TableColumn<>("Uddannelse\nforventes\nafsluttet: ");
+        uddannelseAfsluttesBeboerListe.setMinWidth(100);
+        uddannelseAfsluttesBeboerListe.setCellValueFactory(new PropertyValueFactory<>("uddannelseafslut"));//Property need to match the class's field names
+
+        TableColumn<StudieKontrol, String> uddannelsesRetningBeboerListe = new TableColumn<>("Uddannelsesretning");
+        uddannelsesRetningBeboerListe.setMinWidth(100);
+        uddannelsesRetningBeboerListe.setCellValueFactory(new PropertyValueFactory<>("uddannelseretning"));//Property need to match the class's field names
+
+        TableColumn<StudieKontrol, String> kontrolStatus = new TableColumn<>("KontrolStatus");
+        kontrolStatus.setMinWidth(100);
+        kontrolStatus.setCellValueFactory(new PropertyValueFactory<>("kontrolStatus"));
+
+        studieKontrolListe.setItems(getStudieKontrol());
+        studieKontrolListe.getColumns().addAll(værelseBeboerListe, navnBeboerListe, indflytningsdatoBeboerliste, institutionBeboerListe, påbegyndtUddannelseBeboerListe, uddannelseAfsluttesBeboerListe, uddannelsesRetningBeboerListe, kontrolStatus);
 
     }
     // Viser tabledview med alle bebeor informationer.

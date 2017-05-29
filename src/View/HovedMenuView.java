@@ -32,11 +32,11 @@ import java.util.Optional;
 public class HovedMenuView
 {
 
-    /*
-    Stage window;
-    Scene sceneLogin, sceneStart, sceneStudiekontrol, sceneBeboerListe, sceneFormand;
+    /*Stage window;
+    Scene sceneLogin, sceneStart, sceneStudiekontrol, sceneBeboerListe, sceneFormand, sceneIndstillingsskabeloner;
     DBConnection dbConnection = new DBConnection();
     LoginFunktion loginFunk = new LoginFunktion();
+    PopUps popUps = new PopUps();
     Connection conn;
     PreparedStatement preparedStatement;
     ResultSet resultSet;
@@ -74,10 +74,10 @@ public class HovedMenuView
 
         Button indstillingsSkabelonerButton = new Button("Indstillingsskabeloner");
         indstillingsSkabelonerButton.getStyleClass().add("button-hovedmenu");
-//        indstillingsSkabelonerButton.setOnAction(e-> window.setScene(sceneSkabeloner));
+        indstillingsSkabelonerButton.setOnAction(e-> window.setScene(sceneIndstillingsskabeloner));
 
         Button logoutButton = new Button("Log ud");
-        logoutButton.getStyleClass().add("button-logout");
+        logoutButton.getStyleClass().add("button-hovedmenu");
         logoutButton.setOnAction(e ->{
             try {
                 logoutAlert();
@@ -115,7 +115,7 @@ public class HovedMenuView
         //Buttons tilføjes til HBox for horisontal placering
         Button tilfoejButton = new Button("Tilføj Deadline");
         tilfoejButton.getStyleClass().add("button-tilfoej");
-        tilfoejButton.setOnAction(e -> PopUps.tilføjDeadline("Tilføj Deadline", "Lort"));
+        tilfoejButton.setOnAction(e -> popUps.tilføjDeadline("Tilføj Deadline", "Lort"));
 
         Button fjernButton = new Button("Fjern Deadline");
         fjernButton.getStyleClass().add("button-fjern");
@@ -216,16 +216,16 @@ public class HovedMenuView
 
         Button opdaterBeboerButton = new Button("Opdater\nBeboerInfo");
         opdaterBeboerButton.getStyleClass().add("button-opdater-medlem");
-        //opdaterBeboerButton.setOnAction(e -> PopUps.opdaterBeboerInfo(conn));
+        opdaterBeboerButton.setOnAction(e -> popUps.opdaterBeboerInfo(conn));
         opdaterBeboerButton.setPrefSize(172, 105);
 
         Button påbegyndStudiekontrolButton = new Button("Påbegynd\nstudiekontrol");
         påbegyndStudiekontrolButton.getStyleClass().add("button-paabegynd-studiekontrol");
-        //påbegyndStudiekontrolButton.setOnAction(e -> PopUps.påbegyndStudieKontrol("Påbegynd Studiekontrol"));
+        påbegyndStudiekontrolButton.setOnAction(e -> popUps.påbegyndStudieKontrol("Påbegynd Studiekontrol"));
 
         Button redigerAfslutStudiekontrolButton = new Button("Rediger/afslut\nStudiekontrol");
         redigerAfslutStudiekontrolButton.getStyleClass().add("button-rediger-afslut-studiekontrol");
-        //redigerAfslutStudiekontrolButton.setOnAction(e -> PopUps.redigerAfslutStudiekontrol("button-rediger-afslut-studiekontrol"));
+        redigerAfslutStudiekontrolButton.setOnAction(e -> popUps.redigerAfslutStudiekontrol("button-rediger-afslut-studiekontrol"));
         redigerAfslutStudiekontrolButton.setPrefSize(172, 105);
 
         //menubar and Menu
@@ -297,11 +297,14 @@ public class HovedMenuView
         Button opretNyBeboerButton = new Button("Opret ny\nbeboer");
         opretNyBeboerButton.getStyleClass().add("button-opdater-medlem");
         opretNyBeboerButton.setMinWidth(150);
-        opretNyBeboerButton.setOnAction(e -> PopUps.opretBeboer(conn, beboerListe, beboerData));
+        opretNyBeboerButton.setOnAction(event -> {
+            popUps.opretBeboer(conn, beboerListe, beboerData);
+            //testController.opretBeboerButtonClick();
 
+        });
         Button opdaterBeboerButton2 = new Button("Opdater \nBeboerinfo");
         opdaterBeboerButton2.getStyleClass().add("button-paabegynd-studiekontrol");
-        opdaterBeboerButton2.setOnAction(e -> PopUps.opdaterBeboerInfo(conn));
+        opdaterBeboerButton2.setOnAction(e -> popUps.opdaterBeboerInfo(conn));
 
         //menubar and Menu
         Menu menuHelpBeboerListe = new Menu("_Hjælp");
@@ -335,7 +338,6 @@ public class HovedMenuView
         VBox leftBeboerListeLayout = new VBox(10, button2);
         leftBeboerListeLayout.setPadding(new Insets(10));
 
-
         //Right Layout of beboerlistemenu
         VBox rightBeboerListeLayout = new VBox(15, opretNyBeboerButton, opdaterBeboerButton2);
         rightBeboerListeLayout.setPadding(new Insets(20));
@@ -360,10 +362,12 @@ public class HovedMenuView
         sceneBeboerListe.getStylesheets().add("Layout.css");
 
         //FORMAND MENU
+
         //Venstre side af menuen.
         Button tilbageButton = new Button("Tilbage til Hovedmenu");
         tilbageButton.setOnAction(e -> window.setScene(sceneStart));
         VBox leftLayoutFormand = new VBox(20, tilbageButton);
+        leftLayoutFormand.setPadding(new Insets(20,0,0,0));
 
         //Højre side af menuen.
         Label labeltest = new Label("");
@@ -381,11 +385,13 @@ public class HovedMenuView
         //TabDispensation
         Button redigerDispensationButton = new Button("Rediger i\nDispensation\n (Kun for formanden)");
         redigerDispensationButton.getStyleClass().add("button-rediger-dispensation");
+        redigerDispensationButton.setOnAction(e-> PopUps.redigerIDispensation("Rediger i dispensation"));
 
         Button fjernDispensationButton = new Button("Fjern \nDispensation\n(Kun for formanden)");
         fjernDispensationButton.getStyleClass().add("button-afslut-dispensation");
 
         Button svarPåDispensationButton = new Button("Svar på\nDispensationsansøgning\n(kun for formanden)");
+        svarPåDispensationButton.setOnAction(e-> PopUps.svarPåDispensation("Svar på Dispensationsansøgning"));
         svarPåDispensationButton.getStyleClass().add("button-svar-paa-dispensation");
         svarPåDispensationButton.setPrefSize(240, 135);
 
@@ -396,38 +402,8 @@ public class HovedMenuView
         Label dispensationLayoutLabel = new Label("Igangværende og kommende dispensationer: ");
         dispensationLayoutLabel.getStyleClass().add("label-hovedmenu");
 
-        TableColumn<Dispensation, Integer> værelseDispensation = new TableColumn<>("Værelse");
-        værelseDispensation.setMaxWidth(70);
-        værelseDispensation.setCellValueFactory(new PropertyValueFactory<>("værelse"));//Property need to match the class's field names
-
-        TableColumn<Dispensation, String> navnDispensation = new TableColumn<>("Navn");
-        navnDispensation.setMaxWidth(200);
-        navnDispensation.setCellValueFactory(new PropertyValueFactory<>("navn"));//Property need to match the class's field names
-
-        TableColumn<Dispensation, java.util.Date> startDatoDispensation = new TableColumn<>("Dispensation\nstarter d.");
-        startDatoDispensation.setMaxWidth(100);
-        startDatoDispensation.setCellValueFactory(new PropertyValueFactory<>("startDato"));//Property need to match the class's field names
-
-        TableColumn<Dispensation, String> deadline1Dispensation = new TableColumn<>("Deadline 1");
-        deadline1Dispensation.setMaxWidth(250);
-        deadline1Dispensation.setCellValueFactory(new PropertyValueFactory<>("deadline1"));//Property need to match the class's field names
-
-        TableColumn<Dispensation, String> deadline2Dispensation = new TableColumn<>("Deadline 2");
-        deadline2Dispensation.setMaxWidth(250);
-        deadline2Dispensation.setCellValueFactory(new PropertyValueFactory<>("deadline2"));//Property need to match the class's field names
-
-        TableColumn<Dispensation, String> deadline3Dispensation = new TableColumn<>("Deadline 3");
-        deadline3Dispensation.setMaxWidth(250);
-        deadline3Dispensation.setCellValueFactory(new PropertyValueFactory<>("deadline3"));//Property need to match the class's field names
-
-        TableColumn<Dispensation, java.util.Date> ophørsDatoDispensation = new TableColumn<>("Dispensation\nOphører d.");
-        ophørsDatoDispensation.setMaxWidth(100);
-        ophørsDatoDispensation.setCellValueFactory(new PropertyValueFactory<>("ophørsDato"));//Property need to match the class's field names
-
-        TableView dispensationsView = new TableView();
-        dispensationsView.setItems(getDispensation());
-        dispensationsView.getColumns().addAll(værelseDispensation,navnDispensation,startDatoDispensation,deadline1Dispensation, deadline2Dispensation, deadline3Dispensation, ophørsDatoDispensation);
-        dispensationsView.setMaxSize(1080, 400);
+        TableView<Dispensation> dispensationsView = new TableView<>();
+        visDispensationsTableView(dispensationsView);
 
         VBox dispensationsTabMainLayout = new VBox(10, dispensationLayoutLabel, dispensationsView, dispensationTabCenterLayout);
         dispensationsTabMainLayout.setPadding(new Insets(20));
@@ -436,14 +412,18 @@ public class HovedMenuView
         dispensationTab.setClosable(false);
         dispensationTab.setContent(dispensationsTabMainLayout);
 
+
         //FremlejeTab på FormandsMenu
+
         Button redigerFremlejeButton = new Button("Rediger i\nFremleje\n (Kun for formanden)");
         redigerFremlejeButton.getStyleClass().add("button-rediger-dispensation");
+        redigerFremlejeButton.setOnAction(e->PopUps.redigerIFremleje("Rediger i Ellers Godkendt fremleje"));
 
-        Button fjernFremlejeButton = new Button("Fjern \nDispensation\n(Kun for formanden)");
+        Button fjernFremlejeButton = new Button("Fjern \nFremleje\n(Kun for formanden)");
         fjernFremlejeButton.getStyleClass().add("button-afslut-dispensation");
 
         Button svarPåFremlejeButton = new Button("Svar på\nFremlejeansøgning\n(kun for formanden)");
+        svarPåFremlejeButton.setOnAction(e->PopUps.svarPåFremleje("Svar på Fremlejeansøgning"));
         svarPåFremlejeButton.getStyleClass().add("button-svar-paa-dispensation");
         svarPåFremlejeButton.setPrefSize(240, 135);
 
@@ -464,7 +444,7 @@ public class HovedMenuView
         fremlejetagerFremleje.setMinWidth(300);
         fremlejetagerFremleje.setCellValueFactory(new PropertyValueFactory<>("fremlejetager"));//Property need to match the class's field names
 
-        TableColumn<Fremleje, java.util.Date> startDatoFremleje = new TableColumn<>("Fremlejens\nstart:");
+        TableColumn<Fremleje, Date> startDatoFremleje = new TableColumn<>("Fremlejens\nstart:");
         startDatoFremleje.setMaxWidth(125);
         startDatoFremleje.setMinWidth(125);
         startDatoFremleje.setCellValueFactory(new PropertyValueFactory<>("startDato"));//Property need to match the class's field names
@@ -474,10 +454,11 @@ public class HovedMenuView
         fremlejerFremleje.setMinWidth(300);
         fremlejerFremleje.setCellValueFactory(new PropertyValueFactory<>("fremlejer"));//Property need to match the class's field names
 
-        TableColumn<Fremleje, java.util.Date> slutDatoFremleje = new TableColumn<>("Fremleje\nSlutter");
+        TableColumn<Fremleje, Date> slutDatoFremleje = new TableColumn<>("Fremleje\nSlutter");
         slutDatoFremleje.setMaxWidth(125);
         slutDatoFremleje.setMinWidth(125);
         slutDatoFremleje.setCellValueFactory(new PropertyValueFactory<>("slutDato"));//Property need to match the class's field names
+
 
         TableView fremlejeView = new TableView();
         fremlejeView.setItems(getFremleje());
@@ -490,6 +471,7 @@ public class HovedMenuView
         Tab fremlejeTab = new Tab("Fremleje");
         fremlejeTab.setClosable(false);
         fremlejeTab.setContent(fremlejeTabMainLayout);
+
 
         //KlagerTab på Formanden
         //Layout 1
@@ -516,34 +498,156 @@ public class HovedMenuView
         loginTilKlagerGridPane.getStyleClass().add("root-login");
         loginTilKlagerGridPane.setMaxHeight(210);
 
+
         Button opretKlageButton = new Button("Opret\nKlage");
+        opretKlageButton.setOnAction(e-> PopUps.opretKlageOverBeboer("Opret klage over beboer"));
         opretKlageButton.getStyleClass().add("button-klage");
         opretKlageButton.setPrefSize(240,120);
+        VBox rightLayoutKlagerTab1 = new VBox(opretKlageButton);
+        rightLayoutKlagerTab1.setPadding(new Insets(50));
 
-        HBox klagerTabMainLayout1 = new HBox(10, loginTilKlagerGridPane, opretKlageButton);
+        HBox klagerTabMainLayout1 = new HBox(10, loginTilKlagerGridPane, rightLayoutKlagerTab1);
         klagerTabMainLayout1.setPadding(new Insets(20));
         Tab klagerTab = new Tab("Klager");
         klagerTab.setClosable(false);
         klagerTab.setContent(klagerTabMainLayout1);
 
         //Layout2
+
         Label klageOverskrift1 = new Label("Klageoversigt:");
+        klageOverskrift1.getStyleClass().add("label-hovedmenu");
+
+        TableColumn<KlageStatus, Integer> værelseKlageColumn = new TableColumn<>("Værelse");
+        værelseKlageColumn.setMaxWidth(75);
+        værelseKlageColumn.setMinWidth(75);
+        værelseKlageColumn.setCellValueFactory(new PropertyValueFactory<>("værelse"));//Property need to match the class's field names
+
+        TableColumn<KlageStatus, Integer> navnKlageColumn = new TableColumn<>("Navn");
+        navnKlageColumn.setMaxWidth(300);
+        navnKlageColumn.setMinWidth(200);
+        navnKlageColumn.setCellValueFactory(new PropertyValueFactory<>("navn"));//Property need to match the class's field names
+
+        TableColumn<KlageStatus, Integer> antalKlagerKlageColumn = new TableColumn<>("Antal\nKlager");
+        antalKlagerKlageColumn.setMaxWidth(125);
+        antalKlagerKlageColumn.setMinWidth(125);
+        antalKlagerKlageColumn.setCellValueFactory(new PropertyValueFactory<>("antalKlager"));//Property need to match the class's field names
+
         TableView klagerTableView = new TableView();//Navn, værelse, antal klager
+        klagerTableView.setItems(getKlageStatus());
+        klagerTableView.getColumns().addAll(værelseKlageColumn,navnKlageColumn, antalKlagerKlageColumn);
+
 
         Button opretKlageButton2 = new Button("Opret\nKlage");
         opretKlageButton2.getStyleClass().add("button-klage");
         opretKlageButton2.setPrefSize(240,120);
+        VBox rightLayoutKlagerTab2 = new VBox(opretKlageButton2);
+        rightLayoutKlagerTab2.setPadding(new Insets(100,50,50,50));
+
 
         VBox leftLayoutKlagerTab2 = new VBox(10, klageOverskrift1, klagerTableView);
-        HBox klagerTabMainLayout2 = new HBox(20,leftLayoutKlagerTab2, opretKlageButton2);
+        HBox klagerTabMainLayout2 = new HBox(20,leftLayoutKlagerTab2, rightLayoutKlagerTab2);
+        klagerTabMainLayout2.setPadding(new Insets(30));
 
         loginButton.setOnAction(e->klagerTab.setContent(klagerTabMainLayout2));//Hører til KlageTab for Formand
 
+        //ProtokolTab til formandsMenu
+        Label protokolLabel = new Label("Protokol");
+        protokolLabel.getStyleClass().add("label-hovedmenu");
+
+        TableColumn<Protokol, Date> datoProtokolColumn = new TableColumn<>("Dato:");
+        datoProtokolColumn.setMaxWidth(125);
+        datoProtokolColumn.setMinWidth(125);
+        datoProtokolColumn.setCellValueFactory(new PropertyValueFactory<>("dato"));//Property need to match the class's field names
+
+        TableColumn<Protokol, String> andenSalProtokolColumn = new TableColumn<>("2. sal:");
+        andenSalProtokolColumn.setMaxWidth(125);
+        andenSalProtokolColumn.setMinWidth(125);
+        andenSalProtokolColumn.setCellValueFactory(new PropertyValueFactory<>("andenSalTilstedeværelse"));//Property need to match the class's field names
+
+        TableColumn<Protokol, String> tredjeSalProtokolColumn = new TableColumn<>("3. sal:");
+        tredjeSalProtokolColumn.setMaxWidth(125);
+        tredjeSalProtokolColumn.setMinWidth(125);
+        tredjeSalProtokolColumn.setCellValueFactory(new PropertyValueFactory<>("tredjeSalTilstedeværelse"));//Property need to match the class's field names
+
+        TableColumn<Protokol, String> fjerdeSalProtokolColumn = new TableColumn<>("4. sal:");
+        fjerdeSalProtokolColumn.setMaxWidth(125);
+        fjerdeSalProtokolColumn.setMinWidth(125);
+        fjerdeSalProtokolColumn.setCellValueFactory(new PropertyValueFactory<>("fjerdeSalTilstedeværelse"));//Property need to match the class's field names
+
+        TableColumn<Protokol, String> femteSalProtokolColumn = new TableColumn<>("5. sal:");
+        femteSalProtokolColumn.setMaxWidth(125);
+        femteSalProtokolColumn.setMinWidth(125);
+        femteSalProtokolColumn.setCellValueFactory(new PropertyValueFactory<>("femteSalTilstedeværelse"));//Property need to match the class's field names
+
+        TableColumn<Protokol, String> sjetteSalProtokolColumn = new TableColumn<>("6. sal:");
+        sjetteSalProtokolColumn.setMaxWidth(125);
+        sjetteSalProtokolColumn.setMinWidth(125);
+        sjetteSalProtokolColumn.setCellValueFactory(new PropertyValueFactory<>("sjetteSalTilstedeværelse"));//Property need to match the class's field names
+
+        TableView protokolView = new TableView();
+        protokolView.setMaxSize(750,1000);
+        protokolView.setItems(getProtokol());
+        protokolView.getColumns().addAll(datoProtokolColumn, andenSalProtokolColumn, tredjeSalProtokolColumn, fjerdeSalProtokolColumn, femteSalProtokolColumn, sjetteSalProtokolColumn);
+
+        Label dateProtokolLabel = new Label("    Vælg dato:");
+        dateProtokolLabel.getStyleClass().add("label-login");
+        DatePicker protokolDatePicker = new DatePicker();
+        protokolDatePicker.setEditable(false);
+        protokolDatePicker.setMaxSize(120,20);
+        Label andenSalRepræsentanterLabel = new Label("     2. sal:");
+        andenSalRepræsentanterLabel.getStyleClass().add("label-login");
+        ChoiceBox andenSalRepræsentanterChoiceBox = new ChoiceBox(FXCollections.observableArrayList("Jessica", ""));//Disse Items skal hentes fra 'brugernavn' - eller skal kunne ændres manuelt
+        andenSalRepræsentanterChoiceBox.setMinWidth(110);
+        Label tredjeSalRepræsentanterLabel = new Label("     3. sal:");
+        tredjeSalRepræsentanterLabel.getStyleClass().add("label-login");
+        ChoiceBox tredjeSalRepræsentanterChoiceBox = new ChoiceBox(FXCollections.observableArrayList("Mathias",""));//Disse Items skal hentes fra 'brugernavn' - eller skal kunne ændres manuelt
+        tredjeSalRepræsentanterChoiceBox.setMinWidth(110);
+        Label fjerdeSalRepræsentanterLabel = new Label("     4. sal:");
+        fjerdeSalRepræsentanterLabel.getStyleClass().add("label-login");
+        ChoiceBox fjerdeSalRepræsentanterChoiceBox = new ChoiceBox(FXCollections.observableArrayList("Janus",""));//Disse Items skal hentes fra 'brugernavn' - eller skal kunne ændres manuelt
+        fjerdeSalRepræsentanterChoiceBox.setMinWidth(110);
+        Label femteSalRepræsentanterLabel = new Label("     5. sal:");
+        femteSalRepræsentanterLabel.getStyleClass().add("label-login");
+        ChoiceBox femteSalRepræsentanterChoiceBox = new ChoiceBox(FXCollections.observableArrayList("Peter",""));//Disse Items skal hentes fra 'brugernavn' - eller skal kunne ændres manuelt
+        femteSalRepræsentanterChoiceBox.setMinWidth(110);
+        Label sjetteSalRepræsentanterLabel = new Label("     6. sal:");
+        sjetteSalRepræsentanterLabel.getStyleClass().add("label-login");
+
+        ChoiceBox sjetteSalRepræsentanterChoiceBox = new ChoiceBox(FXCollections.observableArrayList("Natali",""));//Disse Items skal hentes fra 'brugernavn' - eller skal kunne ændres manuelt
+        sjetteSalRepræsentanterChoiceBox.setMinWidth(110);
+        Button førProtokolButton = new Button("Tilføj til\nProtokol");
+        førProtokolButton.getStyleClass().add("button-tilfoej-til-protokol");
+        Button redigerProtokolButton = new Button("Rediger Protokol\n(Kun For formanden)");
+        redigerProtokolButton.getStyleClass().add("button-rediger-i-protokol");
+
+        GridPane formandProtokolMainLayout = new GridPane();
+        formandProtokolMainLayout.setHgap(15);
+        formandProtokolMainLayout.setVgap(5);
+        formandProtokolMainLayout.setPadding(new Insets(7.5));
+        formandProtokolMainLayout.add(protokolLabel,1,1,12,1);
+        formandProtokolMainLayout.add(protokolView,1,2,12,10);
+        formandProtokolMainLayout.add(dateProtokolLabel,1,14);
+        formandProtokolMainLayout.add(protokolDatePicker,1,15);
+        formandProtokolMainLayout.add(andenSalRepræsentanterLabel,2,14);
+        formandProtokolMainLayout.add(andenSalRepræsentanterChoiceBox,2,15);
+        formandProtokolMainLayout.add(tredjeSalRepræsentanterLabel,3,14);
+        formandProtokolMainLayout.add(tredjeSalRepræsentanterChoiceBox,3,15);
+        formandProtokolMainLayout.add(fjerdeSalRepræsentanterLabel,4,14);
+        formandProtokolMainLayout.add(fjerdeSalRepræsentanterChoiceBox,4,15);
+        formandProtokolMainLayout.add(femteSalRepræsentanterLabel,5,14);
+        formandProtokolMainLayout.add(femteSalRepræsentanterChoiceBox,5,15);
+        formandProtokolMainLayout.add(sjetteSalRepræsentanterLabel,6,14);
+        formandProtokolMainLayout.add(sjetteSalRepræsentanterChoiceBox,6,15);
+        formandProtokolMainLayout.add(førProtokolButton,7,15);
+        formandProtokolMainLayout.add(redigerProtokolButton,3,25,3,3);
+
         Tab protokolTab = new Tab("Protokol");
         protokolTab.setClosable(false);
+        protokolTab.setContent(formandProtokolMainLayout);
 
         TabPane centerLayoutFormand = new TabPane();
         centerLayoutFormand.getTabs().addAll(velkommenTab, dispensationTab, fremlejeTab, klagerTab, protokolTab);
+
 
         BorderPane formandBorderPane = new BorderPane();
         formandBorderPane.setLeft(leftLayoutFormand);
@@ -552,6 +656,100 @@ public class HovedMenuView
         formandBorderPane.setPrefSize(1450,900);
         sceneFormand = new Scene(formandBorderPane);
         sceneFormand.getStylesheets().add("Layout.css");
+
+        //Scene Indstillingsskabeloner
+        Button tilbageTilHovedMenuButton = new Button("Tilbage til Hovedmenu");
+        Label indstillingsskabelonerHovedLabel = new Label("Indstillingsskabeloner");
+        indstillingsskabelonerHovedLabel.getStyleClass().add("label-hovedmenu");
+        tilbageTilHovedMenuButton.setOnAction(e -> window.setScene(sceneStart));
+        //1) Klager
+        Label klageSkabelonerLabel = new Label("Klager:");
+        klageSkabelonerLabel.getStyleClass().add("label-skabeloner");
+        Button skabelonKlageForSenDokumentationButton = new Button("Klageskabelon forsent afleveret studiedokumentation");
+        skabelonKlageForSenDokumentationButton.getStyleClass().add("button-skabeloner");
+        Button skabelonKlagerÆndringerButton = new Button("Klageskabelon for ikke at orientere om Studieændringer");
+        skabelonKlagerÆndringerButton.getStyleClass().add("button-skabeloner");
+        //2) Fremleje
+        Label fremlejeSkabelonLabel = new Label("Fremleje:");
+        fremlejeSkabelonLabel.getStyleClass().add("label-skabeloner");
+        Button skabelonFremlejerButton = new Button("Fremleje");
+        skabelonFremlejerButton.getStyleClass().add("button-skabeloner");
+        Button typeformularU1991FremlejeButton = new Button("Typeformular(U1991) til fremleje");
+        typeformularU1991FremlejeButton.getStyleClass().add("button-skabeloner");
+        //3) Dispensation
+        Label dispensationSkabelonLabel = new Label("Dispensation:");
+        dispensationSkabelonLabel.getStyleClass().add("label-skabeloner");
+        Button skabelonDispensationButton = new Button("Dispensation");
+        skabelonDispensationButton.getStyleClass().add("button-skabeloner");
+        //4) Studiekontrol//Følgeseddel //'påmindelser' //Studiekontrol der kan laves i hånden
+        Label studiekontrolSkabelonerLabel = new Label("Studiekontrol");
+        studiekontrolSkabelonerLabel.getStyleClass().add("label-skabeloner");
+        Button skabelonStudiekontrolBlanketButton = new Button("Studiekontrolsblanket til Udfyldning");
+        skabelonStudiekontrolBlanketButton.getStyleClass().add("button-skabeloner");
+        Button skabelonStudiekontrolFølgeseddelBlanketButton = new Button("Følgeseddel til studiekontrol");
+        skabelonStudiekontrolFølgeseddelBlanketButton.getStyleClass().add("button-skabeloner");
+        Button skabelonStudiekontrolPåmindelseButton = new Button("Påmindelse om studiekontrol");
+        skabelonStudiekontrolPåmindelseButton.getStyleClass().add("button-skabeloner");
+        Button skabelonStudiekontrolBlanketTilMapperButton = new Button("Studiekontrolsblanket til Repræsentanternes Mapper");
+        skabelonStudiekontrolBlanketTilMapperButton.getStyleClass().add("button-skabeloner");
+        Button uoverensstemmelseIOplysningerButton = new Button("Uoverensstemmelse i Oplysninger ifbm. studiekontrol");
+        uoverensstemmelseIOplysningerButton.getStyleClass().add("button-skabeloner");
+
+        //5) Opsigelser
+        Label opsigelseSkabelonLabel = new Label("Opsigelse af Værelse:");
+        opsigelseSkabelonLabel.getStyleClass().add("label-skabeloner");
+        Button opsigelsesskabelonButton = new Button("Opsigelsesblanket");
+        opsigelsesskabelonButton.getStyleClass().add("button-skabeloner");
+
+        //6)Ansøgningsskema
+        Label ansøgningsksemaSkabelonLabel = new Label("Ansøgningsskema");
+        ansøgningsksemaSkabelonLabel.getStyleClass().add("label-skabeloner");
+        Button ansøgningsskemaSkabelonButton = new Button("Ansøgningsskema");
+        ansøgningsskemaSkabelonButton.getStyleClass().add("button-skabeloner");
+
+        //7) Brevpapir
+        Label brevpapirSkabelonLabel = new Label("Brevpapir:");
+        brevpapirSkabelonLabel.getStyleClass().add("label-skabeloner");
+        Button brevpapirSkabelonButton = new Button("Brevpapir");
+        brevpapirSkabelonButton.getStyleClass().add("button-skabeloner");
+
+        //8)Regler for indstillingen
+        Label andetSkabelonerLabel = new Label("Andet:");
+        andetSkabelonerLabel.getStyleClass().add("label-skabeloner");
+        Button indstillingsreglerButton = new Button("Indstillingsregler");
+        indstillingsreglerButton.getStyleClass().add("button-skabeloner");
+        //9)(Links til lovgivning) - andre ting
+
+        GridPane indstillingsskabelonerPane = new GridPane();
+        indstillingsskabelonerPane.setPadding(new Insets(20,10,20,10));
+        indstillingsskabelonerPane.setVgap(1);
+        indstillingsskabelonerPane.add(tilbageTilHovedMenuButton,1,2,1,1);
+        indstillingsskabelonerPane.add(indstillingsskabelonerHovedLabel,4,1,4,1);
+        indstillingsskabelonerPane.add(klageSkabelonerLabel,4,4,4,1);
+        indstillingsskabelonerPane.add(skabelonKlageForSenDokumentationButton,2,6,4,1);
+        indstillingsskabelonerPane.add(skabelonKlagerÆndringerButton,2,7,4,1);
+        indstillingsskabelonerPane.add(fremlejeSkabelonLabel,4, 9,4,1);
+        indstillingsskabelonerPane.add(skabelonFremlejerButton,2,10,4,1);
+        indstillingsskabelonerPane.add(typeformularU1991FremlejeButton,2,11,4,1);
+        indstillingsskabelonerPane.add(dispensationSkabelonLabel,4,13,4,1);
+        indstillingsskabelonerPane.add(skabelonDispensationButton,2,14,4,1);
+        indstillingsskabelonerPane.add(studiekontrolSkabelonerLabel,4,16,4,1);
+        indstillingsskabelonerPane.add(skabelonStudiekontrolBlanketButton,2,17,4,1);
+        indstillingsskabelonerPane.add(skabelonStudiekontrolFølgeseddelBlanketButton,2,18,4,1);
+        indstillingsskabelonerPane.add(skabelonStudiekontrolPåmindelseButton,2,19,4,1);
+        indstillingsskabelonerPane.add(skabelonStudiekontrolBlanketTilMapperButton,2,20,4,1);
+        indstillingsskabelonerPane.add(uoverensstemmelseIOplysningerButton,2,21,4,1);
+        indstillingsskabelonerPane.add(opsigelseSkabelonLabel,4,23,4,1);
+        indstillingsskabelonerPane.add(opsigelsesskabelonButton,2,24,4,1);
+        indstillingsskabelonerPane.add(ansøgningsksemaSkabelonLabel,4,26,4,1);
+        indstillingsskabelonerPane.add(ansøgningsskemaSkabelonButton,2,27,4,1);
+        indstillingsskabelonerPane.add(brevpapirSkabelonLabel,4,29,4,1);
+        indstillingsskabelonerPane.add(brevpapirSkabelonButton,2,30,4,1);
+        indstillingsskabelonerPane.add(andetSkabelonerLabel,4,34,4,1);
+        indstillingsskabelonerPane.add(indstillingsreglerButton,2,35,4,1);
+
+        sceneIndstillingsskabeloner = new Scene(indstillingsskabelonerPane);
+        sceneIndstillingsskabeloner.getStylesheets().add("Layout.css");
 
         //Afsluttende - sætter scenen
 
@@ -601,6 +799,16 @@ public class HovedMenuView
         ObservableList<Fremleje> fremleje = FXCollections.observableArrayList();
         fremleje.add(new Fremleje(422, "Mette Frederiksen", "Jesper mikkelsen", new java.util.Date(2017, 10, 1), new java.util.Date(2017, 12, 31)));
         return fremleje;
+    }
+    public ObservableList<KlageStatus> getKlageStatus(){
+        ObservableList<KlageStatus> klageStatus = FXCollections.observableArrayList();
+        klageStatus.add(new KlageStatus(403,"Mette Frederiksen",2));
+        return klageStatus;
+    }
+    public ObservableList<Protokol> getProtokol(){
+        ObservableList<Protokol> protokol = FXCollections.observableArrayList();
+        protokol.add(new Protokol(new Date(2017, 5,15), "Jessica","Mathias","Janus","Peter","Natali"));
+        return protokol;
     }
 
     public TableView visAndenSal()
@@ -850,7 +1058,39 @@ public class HovedMenuView
 
         beboerListe.setItems(getBeboer());
         beboerListe.getColumns().addAll(værelseBeboerListe, navnBeboerListe, indflytningsdatoBeboerliste, institutionBeboerListe, påbegyndtUddannelseBeboerListe, uddannelseAfsluttesBeboerListe, uddannelsesRetningBeboerListe, emailBeboerListe);
-
     }
-*/
+    public void visDispensationsTableView(TableView<Dispensation> dispensationsView)
+    {
+        TableColumn<Dispensation, Integer> værelseDispensation = new TableColumn<>("Værelse");
+        værelseDispensation.setMaxWidth(70);
+        værelseDispensation.setCellValueFactory(new PropertyValueFactory<>("værelse"));//Property need to match the class's field names
+
+        TableColumn<Dispensation, String> navnDispensation = new TableColumn<>("Navn");
+        navnDispensation.setMaxWidth(200);
+        navnDispensation.setCellValueFactory(new PropertyValueFactory<>("navn"));//Property need to match the class's field names
+
+        TableColumn<Dispensation, Date> startDatoDispensation = new TableColumn<>("Dispensation\nstarter d.");
+        startDatoDispensation.setMaxWidth(100);
+        startDatoDispensation.setCellValueFactory(new PropertyValueFactory<>("startDato"));//Property need to match the class's field names
+
+        TableColumn<Dispensation, String> deadline1Dispensation = new TableColumn<>("Deadline 1");
+        deadline1Dispensation.setMaxWidth(250);
+        deadline1Dispensation.setCellValueFactory(new PropertyValueFactory<>("deadline1"));//Property need to match the class's field names
+
+        TableColumn<Dispensation, String> deadline2Dispensation = new TableColumn<>("Deadline 2");
+        deadline2Dispensation.setMaxWidth(250);
+        deadline2Dispensation.setCellValueFactory(new PropertyValueFactory<>("deadline2"));//Property need to match the class's field names
+
+        TableColumn<Dispensation, String> deadline3Dispensation = new TableColumn<>("Deadline 3");
+        deadline3Dispensation.setMaxWidth(250);
+        deadline3Dispensation.setCellValueFactory(new PropertyValueFactory<>("deadline3"));//Property need to match the class's field names
+
+        TableColumn<Dispensation, Date> ophørsDatoDispensation = new TableColumn<>("Dispensation\nOphører d.");
+        ophørsDatoDispensation.setMaxWidth(100);
+        ophørsDatoDispensation.setCellValueFactory(new PropertyValueFactory<>("ophørsDato"));//Property need to match the class's field names
+
+        dispensationsView.setItems(getDispensation());
+        dispensationsView.getColumns().addAll(værelseDispensation,navnDispensation,startDatoDispensation,deadline1Dispensation, deadline2Dispensation, deadline3Dispensation, ophørsDatoDispensation);
+        dispensationsView.setMaxSize(1080, 400);
+    }*/
 }
