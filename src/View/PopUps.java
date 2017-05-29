@@ -187,6 +187,9 @@ public class PopUps
         //Log.insertIntoLog("Beboer Opdateret");
         alert.show();
     }
+    /**
+     * @param conn opretter database connection
+     * */
 
     public void opdaterBeboerInfo(Connection conn) {
         Stage window = new Stage();
