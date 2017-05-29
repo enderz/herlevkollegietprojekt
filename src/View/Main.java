@@ -57,7 +57,7 @@ public class Main extends Application
 
         window = primaryStage;
         window.setTitle("LOG IND - Herlev Kollegiet");
-        window.getIcons().add(new Image("Butterfly1.jpg"));
+        window.getIcons().add(new Image("HeKoLogo.png"));
 
         GridPane grid = new GridPane();
         grid.setStyle("-fx-background-color: #508090;");
@@ -87,6 +87,7 @@ public class Main extends Application
                    //HovedMenuView hovedMenuView = new HovedMenuView();
                    //hovedMenuView.startHovedMenu(window);
                    startHovedMenu(window);
+                   Log.insertIntoLog(nameInput.getText()+" logget ind");
 
                 }catch (Exception e){
                     e.printStackTrace();
@@ -111,6 +112,7 @@ public class Main extends Application
                     //HovedMenuView hovedMenuView = new HovedMenuView();
                     //hovedMenuView.startHovedMenu(window);
                     startHovedMenu(window);
+                    Log.insertIntoLog(nameInput.getText()+" logget ind");
                 }catch (Exception e){
                     e.printStackTrace();
                 }
@@ -131,7 +133,7 @@ public class Main extends Application
 
         window = primaryStage;
         window.setTitle("Herlevkollegiets Indstillingsudvalg");
-        window.getIcons().add(new Image("Butterfly1.jpg")); // HER SKAL HEKO LOGO VÆRE
+        window.getIcons().add(new Image("HeKoLogo.png")); // HER SKAL HEKO LOGO VÆRE
 
         //VENSTRE DEL AF HOVEDMENUEN
         //Buttons...
@@ -139,7 +141,7 @@ public class Main extends Application
         studiekontrolButton.getStyleClass().add("button-hovedmenu");
         studiekontrolButton.setOnAction(e -> {
             window.setScene(sceneStudiekontrol);
-            visAlleBeboer();
+            visStudieKontrolBeboer();
         });
 
         Button beboerListeButton = new Button("Beboer-Liste");
@@ -162,6 +164,7 @@ public class Main extends Application
         logoutButton.setOnAction(e ->{
             try {
                 logoutAlert();
+                Log.insertIntoLog("Bruger Logget ud.");
             } catch (Exception e1) {
                 e1.printStackTrace();
             }
@@ -917,7 +920,10 @@ public class Main extends Application
                         resultSet.getDate("Uddanelsesstart"),
                         resultSet.getDate("Uddannelseafsluttes"),
                         resultSet.getString("Uddannelseretning"),
-                        resultSet.getString("Email")
+                        resultSet.getString("Email"),
+                        resultSet.getString("KontrolStatus"),
+                        resultSet.getString("SlutStudieMaaned"),
+                        resultSet.getString("IndflytningsMaaned")
                 ));
                 beboerListe.setItems(beboerData);
             }
@@ -952,7 +958,10 @@ public class Main extends Application
                         resultSet.getDate("Uddanelsesstart"),
                         resultSet.getDate("Uddannelseafsluttes"),
                         resultSet.getString("Uddannelseretning"),
-                        resultSet.getString("Email")
+                        resultSet.getString("Email"),
+                        resultSet.getString("KontrolStatus"),
+                        resultSet.getString("SlutStudieMaaned"),
+                        resultSet.getString("IndflytningsMaaned")
                 ));
                 beboerListe.setItems(beboerData);
             }
@@ -987,7 +996,10 @@ public class Main extends Application
                         resultSet.getDate("Uddanelsesstart"),
                         resultSet.getDate("Uddannelseafsluttes"),
                         resultSet.getString("Uddannelseretning"),
-                        resultSet.getString("Email")
+                        resultSet.getString("Email"),
+                        resultSet.getString("KontrolStatus"),
+                        resultSet.getString("SlutStudieMaaned"),
+                        resultSet.getString("IndflytningsMaaned")
                 ));
                 beboerListe.setItems(beboerData);
             }
@@ -1022,7 +1034,10 @@ public class Main extends Application
                         resultSet.getDate("Uddanelsesstart"),
                         resultSet.getDate("Uddannelseafsluttes"),
                         resultSet.getString("Uddannelseretning"),
-                        resultSet.getString("Email")
+                        resultSet.getString("Email"),
+                        resultSet.getString("KontrolStatus"),
+                        resultSet.getString("SlutStudieMaaned"),
+                        resultSet.getString("IndflytningsMaaned")
                 ));
                 beboerListe.setItems(beboerData);
             }
@@ -1057,7 +1072,10 @@ public class Main extends Application
                         resultSet.getDate("Uddanelsesstart"),
                         resultSet.getDate("Uddannelseafsluttes"),
                         resultSet.getString("Uddannelseretning"),
-                        resultSet.getString("Email")
+                        resultSet.getString("Email"),
+                        resultSet.getString("KontrolStatus"),
+                        resultSet.getString("SlutStudieMaaned"),
+                        resultSet.getString("IndflytningsMaaned")
                 ));
                 beboerListe.setItems(beboerData);
             }
@@ -1079,7 +1097,9 @@ public class Main extends Application
         visStudieKontrolTableView(studieKontrolListe);
 
         try{
-            String sql = "SELECT * FROM StudieKontrol";
+            //String sql = "SELECT * FROM StudieKontrol WHERE KontrolStatus = ''";
+            String sql = "SELECT VaerelseNr, Navn, Indflytningsdato, Uddannelsested, Uddanelsesstart, Uddannelseafsluttes, Uddannelseretning, KontrolStatus \n" +
+                    "FROM Beboer WHERE KontrolStatus IS NULL OR KontrolStatus=''";
             preparedStatement = conn.prepareStatement(sql);
             resultSet = preparedStatement.executeQuery();
 
@@ -1089,9 +1109,9 @@ public class Main extends Application
                         resultSet.getInt("VaerelseNr"),
                         resultSet.getString("Navn"),
                         resultSet.getDate("Indflytningsdato"),
-                        resultSet.getString("Uddannelsesinstution"),
-                        resultSet.getDate("Uddannelsestart"),
-                        resultSet.getDate("Uddannelseslut"),
+                        resultSet.getString("Uddannelsested"),
+                        resultSet.getDate("Uddanelsesstart"),
+                        resultSet.getDate("Uddannelseafsluttes"),
                         resultSet.getString("Uddannelseretning"),
                         resultSet.getString("KontrolStatus")
                 ));
@@ -1131,7 +1151,10 @@ public class Main extends Application
                         resultSet.getDate("Uddanelsesstart"),
                         resultSet.getDate("Uddannelseafsluttes"),
                         resultSet.getString("Uddannelseretning"),
-                        resultSet.getString("Email")
+                        resultSet.getString("Email"),
+                        resultSet.getString("KontrolStatus"),
+                        resultSet.getString("SlutStudieMaaned"),
+                        resultSet.getString("IndflytningsMaaned")
                 ));
                 beboerListe.setItems(beboerData);
             }
@@ -1176,6 +1199,14 @@ public class Main extends Application
         TableColumn<StudieKontrol, String> kontrolStatus = new TableColumn<>("KontrolStatus");
         kontrolStatus.setMinWidth(100);
         kontrolStatus.setCellValueFactory(new PropertyValueFactory<>("kontrolStatus"));
+
+        /*TableColumn<StudieKontrol, String> slutStudieMaaned = new TableColumn<>("SlutStudieMaaned");
+        slutStudieMaaned.setMinWidth(100);
+        slutStudieMaaned.setCellValueFactory(new PropertyValueFactory<>("slutStudeiMaaned"));
+
+        TableColumn<StudieKontrol, String> indflytMaaned = new TableColumn<>("IndflytningsMaaned");
+        indflytMaaned.setMinWidth(100);
+        indflytMaaned.setCellValueFactory(new PropertyValueFactory<>("indflytMaaned"));*/
 
         studieKontrolListe.setItems(getStudieKontrol());
         studieKontrolListe.getColumns().addAll(værelseBeboerListe, navnBeboerListe, indflytningsdatoBeboerliste, institutionBeboerListe, påbegyndtUddannelseBeboerListe, uddannelseAfsluttesBeboerListe, uddannelsesRetningBeboerListe, kontrolStatus);

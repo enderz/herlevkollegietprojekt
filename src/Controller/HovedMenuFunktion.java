@@ -51,7 +51,10 @@ public class HovedMenuFunktion {
                             resultSet.getDate("Uddanelsesstart"),
                             resultSet.getDate("Uddannelseafsluttes"),
                             resultSet.getString("Uddannelseretning"),
-                            resultSet.getString("Email")
+                            resultSet.getString("Email"),
+                            resultSet.getString("KontrolStatus"),
+                            resultSet.getString("SlutStudieMaaned"),
+                            resultSet.getString("IndflytningsMaaned")
                     ));
                     beboerListe.setItems(beboerData);
 

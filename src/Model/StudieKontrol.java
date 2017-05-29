@@ -15,6 +15,9 @@ public class StudieKontrol
     private Date uddannelseafslut;
     private String uddannelseretning;
     private String kontrolStatus;
+    private String slutStudeiMaaned;
+    private String indflytMaaned;
+
 
     public StudieKontrol(){
     }
@@ -95,6 +98,22 @@ public class StudieKontrol
 
     public void setKontrolStatus(String email) {
         this.kontrolStatus = kontrolStatus;
+    }
+
+    public String getSlutStudeiMaaned() {
+        return slutStudeiMaaned;
+    }
+
+    public void setSlutStudeiMaaned(String slutStudeiMaaned) {
+        this.slutStudeiMaaned = slutStudeiMaaned;
+    }
+
+    public String getIndflytMaaned() {
+        return indflytMaaned;
+    }
+
+    public void setIndflytMaaned(String indflytMaaned) {
+        this.indflytMaaned = indflytMaaned;
     }
 
 }

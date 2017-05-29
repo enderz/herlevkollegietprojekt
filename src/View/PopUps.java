@@ -3,6 +3,7 @@ package View; /**
  */
 import Controller.HovedMenuFunktion;
 import Model.Beboer;
+import Model.Log;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -102,6 +103,9 @@ public class PopUps
         TextField textUddannelseForventesAfsluttet = new TextField();
         TextField textUddannelsesRetning = new TextField();
         TextField textEmail = new TextField();
+        TextField textStatus = new TextField();
+        TextField textSlutMaaned = new TextField();
+        TextField textIndflytMaaned = new TextField();
 
         Button buttonFortryd = new Button("Fortryd");
         buttonFortryd.setOnAction(e -> window.close());
@@ -131,7 +135,7 @@ public class PopUps
                     java.util.Date uddanelsestart = new SimpleDateFormat("yyyy-MM-dd").parse(textUddannelsePåbegyndt.getText());
                     java.util.Date uddannelseslut = new SimpleDateFormat("yyyy-MM-dd").parse(textUddannelseForventesAfsluttet.getText());
 
-                    beboerData.add(new Beboer(Integer.parseInt(textVærelse.getText()),textNavn.getText(), dateindflyt, textUddannelsesInstitution.getText(), uddanelsestart ,uddannelseslut, textUddannelsesRetning.getText(), textEmail.getText()));
+                    beboerData.add(new Beboer(Integer.parseInt(textVærelse.getText()),textNavn.getText(), dateindflyt, textUddannelsesInstitution.getText(), uddanelsestart ,uddannelseslut, textUddannelsesRetning.getText(), textEmail.getText(),textStatus.getText(),textSlutMaaned.getText(),textIndflytMaaned.getText()));
                     beboerListe.getColumns().get(0).setVisible(false);
                     beboerListe.getColumns().get(0).setVisible(true);
 
@@ -172,6 +176,7 @@ public class PopUps
         alert.setHeaderText(null);
         alert.setTitle("Beboer Info");
         alert.setContentText("Beboer oprettet korrekt.");
+        //Log.insertIntoLog("Beboer oprettet");
         alert.show();
     }
     public void beboerOpdateretOKAlert(){
@@ -179,6 +184,7 @@ public class PopUps
         alert.setHeaderText(null);
         alert.setTitle("Beboer Opdatering Info");
         alert.setContentText("Beboer er opdateret korrekt.");
+        //Log.insertIntoLog("Beboer Opdateret");
         alert.show();
     }
 
@@ -198,6 +204,7 @@ public class PopUps
         Label labelUddannelseForventesAfsluttet = new Label("Uddannelse forventes afsluttet:");
         Label labelEmail = new Label("Email:");
 
+
         TextField textVærelse = new TextField();
         TextField textNavn = new TextField();
         TextField textIndflytning = new TextField();
@@ -206,6 +213,9 @@ public class PopUps
         TextField textUddannelseForventesAfsluttet = new TextField();
         TextField textUddannelsesRetning = new TextField();
         TextField textEmail = new TextField();
+        TextField textStatus = new TextField();
+        TextField textSlutMaaned = new TextField();
+        TextField textIndflytMaaned = new TextField();
 
         Label labelImporterBeboerInfo = new Label("Indtast Værelsesnummer");
         TextField textFindVærelse = new TextField();
@@ -249,7 +259,7 @@ public class PopUps
         Button buttonOpdaterBeboer = new Button("Opdater Beboer");
         buttonOpdaterBeboer.setPadding(new Insets(20));
         buttonOpdaterBeboer.setOnAction(e -> {
-            try{
+           try{
                 String updateSql = "UPDATE Beboer SET VaerelseNr = ?, Navn = ?, Indflytningsdato = ?, Uddannelsested = ?, Uddanelsesstart = ?," +
                             "Uddannelseafsluttes = ?, Uddannelseretning = ?, Email = ? WHERE VaerelseNr="+textFindVærelse.getText();
 
@@ -298,6 +308,7 @@ public class PopUps
         window.setScene(scene);
         window.showAndWait();
     }
+
     public void opdaterStudieKontrolInfo(Connection conn) {
         Stage window = new Stage();
 
@@ -313,6 +324,8 @@ public class PopUps
         Label labelUddannelsePåbegyndt = new Label("Uddannelse påbegyndt:");
         Label labelUddannelseForventesAfsluttet = new Label("Uddannelse forventes afsluttet:");
         Label labelStatus = new Label("Kontrol Status:");
+        Label labelSlutMaaned = new Label("Slut Studie Maaned:");
+        Label labelIndflytMaaned = new Label("Indflytningsmåned:");
 
         TextField textVærelse = new TextField();
         TextField textNavn = new TextField();
@@ -322,6 +335,8 @@ public class PopUps
         TextField textUddannelseForventesAfsluttet = new TextField();
         TextField textUddannelsesRetning = new TextField();
         TextField textStatus = new TextField();
+        TextField textSlutMaaned = new TextField();
+        TextField textIndflytMaaned = new TextField();
 
         Label labelImporterBeboerInfo = new Label("Indtast Værelsesnummer");
         TextField textFindVærelse = new TextField();
@@ -333,7 +348,8 @@ public class PopUps
         hentBeboerInfoButton.setMaxSize(120, 120);
         hentBeboerInfoButton.setOnAction(e -> {
             try{
-                String currentSql = "SELECT * FROM StudieKontrol WHERE VaerelseNr ="+textFindVærelse.getText();
+                //String currentSql = "SELECT * FROM StudieKontrol WHERE VaerelseNr ="+textFindVærelse.getText();
+                String currentSql = "SELECT VaerelseNr, Navn, Indflytningsdato, Uddannelsested, Uddanelsesstart, Uddannelseafsluttes, Uddannelseretning, KontrolStatus,SlutStudieMaaned, IndflytningsMaaned FROM Beboer WHERE VaerelseNr="+textFindVærelse.getText();
                 preparedStatement = conn.prepareStatement(currentSql);
                 resultSet = preparedStatement.executeQuery();
 
@@ -341,11 +357,13 @@ public class PopUps
                     textVærelse.setText(resultSet.getString("VaerelseNr"));
                     textNavn.setText(resultSet.getString("Navn"));
                     textIndflytning.setText(resultSet.getString("Indflytningsdato"));
-                    textUddannelsesInstitution.setText(resultSet.getString("Uddannelsesinstution"));
-                    textUddannelsePåbegyndt.setText(resultSet.getString("Uddannelsestart"));
-                    textUddannelseForventesAfsluttet.setText(resultSet.getString("Uddannelseslut"));
+                    textUddannelsesInstitution.setText(resultSet.getString("Uddannelsested"));
+                    textUddannelsePåbegyndt.setText(resultSet.getString("Uddanelsesstart"));
+                    textUddannelseForventesAfsluttet.setText(resultSet.getString("Uddannelseafsluttes"));
                     textUddannelsesRetning.setText(resultSet.getString("Uddannelseretning"));
                     textStatus.setText(resultSet.getString("KontrolStatus"));
+                    textSlutMaaned.setText(resultSet.getString("SlutStudieMaaned"));
+                    textIndflytMaaned.setText(resultSet.getString("IndflytningsMaaned"));
                 }
                 preparedStatement.close();
                 resultSet.close();
@@ -366,10 +384,10 @@ public class PopUps
         buttonOpdaterBeboer.setPadding(new Insets(20));
         buttonOpdaterBeboer.setOnAction(e -> {
             try{
-                String updateSql = "UPDATE StudieKontrol SET VaerelseNr = ?, Navn = ?, Indflytningsdato = ?, Uddannelsesinstution = ?, Uddannelsestart = ?," +
-                        "Uddannelseslut = ?, Uddannelseretning = ?, KontrolStatus = ? WHERE VaerelseNr="+textFindVærelse.getText();
+                String updateSql1 = "UPDATE Beboer SET VaerelseNr = ?, Navn = ?, Indflytningsdato = ?, Uddannelsested = ?, Uddanelsesstart = ?," +
+                        "Uddannelseafsluttes = ?, Uddannelseretning = ?, KontrolStatus = ?, SlutStudieMaaned = ?, IndflytningsMaaned=? WHERE VaerelseNr="+textFindVærelse.getText();
 
-                preparedStatement = conn.prepareStatement(updateSql);
+                preparedStatement = conn.prepareStatement(updateSql1);
                 preparedStatement.setString(1, textVærelse.getText());
                 preparedStatement.setString(2, textNavn.getText());
                 preparedStatement.setString(3, textIndflytning.getText());
@@ -378,10 +396,13 @@ public class PopUps
                 preparedStatement.setString(6, textUddannelseForventesAfsluttet.getText());
                 preparedStatement.setString(7, textUddannelsesRetning.getText());
                 preparedStatement.setString(8, textStatus.getText());
+                preparedStatement.setString(9, textSlutMaaned.getText());
+                preparedStatement.setString(10,textIndflytMaaned.getText());
 
                 preparedStatement.executeUpdate();
                 preparedStatement.close();
                 beboerOpdateretOKAlert();
+
                 window.close();
             }catch (SQLException sqle){
                 sqle.printStackTrace();
@@ -399,8 +420,8 @@ public class PopUps
         topLayout.setBottom(topBottomLayout);
 
         topLayout.setPadding(new Insets(30));
-        VBox leftLayout = new VBox(14, labelVærelse, labelNavn, labelIndflytning, labelUddannelsesInstitution,labelUddannelsePåbegyndt, labelUddannelseForventesAfsluttet, labelUddannelsesRetning, labelStatus, buttonFortryd);
-        VBox rightLayout = new VBox(10, textVærelse, textNavn, textIndflytning, textUddannelsesInstitution, textUddannelsePåbegyndt, textUddannelseForventesAfsluttet,textUddannelsesRetning, textStatus, buttonOpdaterBeboer);
+        VBox leftLayout = new VBox(14, labelVærelse, labelNavn, labelIndflytning, labelUddannelsesInstitution,labelUddannelsePåbegyndt, labelUddannelseForventesAfsluttet, labelUddannelsesRetning, labelStatus, labelSlutMaaned,labelIndflytMaaned, buttonFortryd);
+        VBox rightLayout = new VBox(10, textVærelse, textNavn, textIndflytning, textUddannelsesInstitution, textUddannelsePåbegyndt, textUddannelseForventesAfsluttet,textUddannelsesRetning, textStatus,textSlutMaaned,textIndflytMaaned, buttonOpdaterBeboer);
 
         BorderPane layout = new BorderPane();
         layout.setLeft(leftLayout);
@@ -446,6 +467,9 @@ public class PopUps
 
         Button påbegyndStudieKontrolButton = new Button("Påbegynd\nstudiekontrol");
         påbegyndStudieKontrolButton.getStyleClass().add("button-paabegynd-studiekontrol");
+        påbegyndStudieKontrolButton.setOnAction(event -> {
+
+        });
 
         GridPane topLayout = new GridPane();
         topLayout.setVgap(20);
