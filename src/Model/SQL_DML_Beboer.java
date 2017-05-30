@@ -186,11 +186,10 @@ public class SQL_DML_Beboer
         try{
             String updateKontrolSQL = "UPDATE Beboer SET KontrolStatus='' WHERE SlutStudieMaaned='"+maaned.getValue()+"'";
 
-            System.out.println(updateKontrolSQL);
             preparedStatement = conn.prepareStatement(updateKontrolSQL);
             preparedStatement.executeUpdate();
             preparedStatement.close();
-            //alertBoxes.beboerOpdateretOKAlert();
+            alertBoxes.beboerOpdateretOKAlert();
             window.close();
         }catch (SQLException sqle){
             sqle.printStackTrace();
