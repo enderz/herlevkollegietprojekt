@@ -35,7 +35,7 @@ import java.util.*;
 import java.util.Date;
 
 /**
- * Created by Ender on 07-05-2017.
+ * Created by Herlev Kollegiet Udvikler on 07-05-2017..
  */
 public class Main extends Application
 {
@@ -128,7 +128,6 @@ public class Main extends Application
         window.setScene(sceneLogin);
         window.show();
     }
-
     // HOVEDMENU START
     public void startHovedMenu(Stage primaryStage)
     {
@@ -187,20 +186,8 @@ public class Main extends Application
         Label deadlineLabel = new Label("Deadlines: ");
         deadlineLabel.getStyleClass().add("label-hovedmenu");
 
-        TableColumn<Deadline, String> dato = new TableColumn<>("Dato");
-        TableColumn<Deadline, Integer> værelse = new TableColumn<>("Evt.\nVærelse");
-
-        dato.setMinWidth(70);
-        dato.setCellValueFactory(new PropertyValueFactory<>("dato"));//Property need to match the class's field names
-
-        TableColumn<Deadline, String> deadline = new TableColumn<>("Deadline");
-        deadline.setMinWidth(300);
-        deadline.setSortable(false); // Fjerner mulighed for at sortere
-        deadline.setCellValueFactory(new PropertyValueFactory<>("deadline"));//Property need to match the class's field names
-
-        TableView deadlinesView = new TableView();
-        deadlinesView.setItems(getReminder());
-        deadlinesView.getColumns().addAll(dato, værelse, deadline);
+        TableView<Deadline> deadlineTableView = new TableView<>();
+        tableViews.visDeadlineTableView(deadlineTableView);
 
         //Buttons tilføjes til HBox for horisontal placering
         Button tilfoejButton = new Button("Tilføj Deadline");
@@ -215,36 +202,10 @@ public class Main extends Application
         Label værelsesudlejningLabel = new Label("Værelser til udlejning:");
         værelsesudlejningLabel.getStyleClass().add("label-hovedmenu");
 
-        TableColumn<VaerelsesUdlejning, Integer> ledigeVærelser = new TableColumn<>("Værelse");
-        ledigeVærelser.setCellValueFactory(new PropertyValueFactory<>("værelse"));//Property need to match the class's field names
-
-        TableColumn<VaerelsesUdlejning, java.util.Date> udlejningsdato = new TableColumn<>("Overtagelses-\ndato:");
-        udlejningsdato.setCellValueFactory(new PropertyValueFactory<>("udlejningsdato"));//Property need to match the class's field names
-
-        TableView ledigeVærelserTableView = new TableView(); // DEN HER ER UNDER TAB NUMMER 1
-        ledigeVærelserTableView.setMaxSize(430, 225);
-        ledigeVærelserTableView.setItems(getVærelsesUdlejning());
-        ledigeVærelserTableView.getColumns().addAll(udlejningsdato, ledigeVærelser);
-
+        TableView<VaerelsesUdlejning> vaerelsesUdlejningTableView = new TableView<>();
+        tableViews.visLedigeVaerelserTableView(vaerelsesUdlejningTableView);
         //TAB 2
-        TableColumn<VaerelsesUdlejning, Integer> udlejedeVærelser = new TableColumn<>("Værelse");
-        udlejedeVærelser.setCellValueFactory(new PropertyValueFactory<>("værelse"));//Property need to match the class's field names
-
-        TableColumn<VaerelsesUdlejning, java.util.Date> udlejningsdato1 = new TableColumn<>("Overtagelses-\ndato:");
-        udlejningsdato1.setCellValueFactory(new PropertyValueFactory<>("udlejningsdato"));//Property need to match the class's field names
-        udlejningsdato1.setMaxWidth(110);
-
-        TableColumn<VaerelsesUdlejning, java.util.Date> behandlingsdato = new TableColumn<>("Behandlingsdato");
-        behandlingsdato.setCellValueFactory(new PropertyValueFactory<>("behandlingsdato"));//Property need to match the class's field names
-
-        TableColumn<VaerelsesUdlejning, Integer> behandlerInitialer = new TableColumn<>("Behandler\nInitialer");
-        behandlerInitialer.setSortable(false); // Fjerner mulighed for at sortere
-        behandlerInitialer.setCellValueFactory(new PropertyValueFactory<>("behandlerInitialer"));//Property need to match the class's field names
-
-        TableView udlejedeVærelserTableView = new TableView<>();
-        udlejedeVærelserTableView.setMaxSize(430,217);
-        udlejedeVærelserTableView.setItems(getVærelsesUdlejning());
-        udlejedeVærelserTableView.getColumns().addAll(udlejedeVærelser,udlejningsdato1,behandlingsdato,behandlerInitialer);
+        tableViews.visVaerelsesUdlejningTableVew(vaerelsesUdlejningTableView);
 
         Button buttonTilføjLedigtVærelse = new Button("Tilføj Værelse");
         buttonTilføjLedigtVærelse.getStyleClass().add("button-tilfoej");
@@ -257,14 +218,14 @@ public class Main extends Application
 
         Tab ledigeVærelserTab = new Tab("Ledige værelser");
         BorderPane tab1LedigtVærelseBorderPane = new BorderPane();
-        tab1LedigtVærelseBorderPane.setCenter(ledigeVærelserTableView);
+        tab1LedigtVærelseBorderPane.setCenter(vaerelsesUdlejningTableView);
         tab1LedigtVærelseBorderPane.setBottom(bottomLeftLayoutTab1);
         tab1LedigtVærelseBorderPane.setPrefSize(430, 370);
         ledigeVærelserTab.setContent(tab1LedigtVærelseBorderPane);
         ledigeVærelserTab.setClosable(false);
 
         Tab udlejedeVærelserTab = new Tab("Udlejede\nVærelser");
-        udlejedeVærelserTab.setContent(udlejedeVærelserTableView);
+        udlejedeVærelserTab.setContent(vaerelsesUdlejningTableView);
         udlejedeVærelserTab.setClosable(false);
 
         TabPane værelsesudlejningTabpane = new TabPane(ledigeVærelserTab, udlejedeVærelserTab);
@@ -280,7 +241,7 @@ public class Main extends Application
 
         bottomLayoutHovedMenu.setLeft(bottomLeftHovedMenu);
 
-        VBox bottomRightLayout = new VBox(deadlineLabel, deadlinesView, bottomRightHovedMenu);
+        VBox bottomRightLayout = new VBox(deadlineLabel, deadlineTableView, bottomRightHovedMenu);
         bottomRightLayout.setPadding(new Insets(10));
         bottomRightLayout.setSpacing(20);
         bottomRightLayout.setPrefSize(430,400);
@@ -502,7 +463,6 @@ public class Main extends Application
         HBox dispensationTabCenterLayout = new HBox(50, redigerDispensationButton, fjernDispensationButton, svarPåDispensationButton);
         dispensationTabCenterLayout.setPadding(new Insets(40, 30, 20, 120));
 
-
         Label dispensationLayoutLabel = new Label("Igangværende og kommende dispensationer: ");
         dispensationLayoutLabel.getStyleClass().add("label-hovedmenu");
 
@@ -533,42 +493,13 @@ public class Main extends Application
         HBox fremlejeTabCenterLayout = new HBox(50, redigerFremlejeButton,fjernFremlejeButton, svarPåFremlejeButton);
         fremlejeTabCenterLayout.setPadding(new Insets(40, 30, 20, 120));
 
-
         Label fremlejeLayoutLabel = new Label("Igangværende og kommende Fremlejer: ");
         fremlejeLayoutLabel.getStyleClass().add("label-hovedmenu");
 
-        TableColumn<Fremleje, Integer> værelseFremleje = new TableColumn<>("Værelse");
-        værelseFremleje.setMaxWidth(70);
-        værelseFremleje.setMinWidth(70);
-        værelseFremleje.setCellValueFactory(new PropertyValueFactory<>("værelse"));//Property need to match the class's field names
+        TableView<Fremleje> fremlejeTableView = new TableView<>();
+        tableViews.visFremLejeTableView(fremlejeTableView);
 
-        TableColumn<Dispensation, String> fremlejetagerFremleje = new TableColumn<>("Fremlejetager");
-        fremlejetagerFremleje.setMaxWidth(300);
-        fremlejetagerFremleje.setMinWidth(300);
-        fremlejetagerFremleje.setCellValueFactory(new PropertyValueFactory<>("fremlejetager"));//Property need to match the class's field names
-
-        TableColumn<Fremleje, Date> startDatoFremleje = new TableColumn<>("Fremlejens\nstart:");
-        startDatoFremleje.setMaxWidth(125);
-        startDatoFremleje.setMinWidth(125);
-        startDatoFremleje.setCellValueFactory(new PropertyValueFactory<>("startDato"));//Property need to match the class's field names
-
-        TableColumn<Fremleje, String> fremlejerFremleje = new TableColumn<>("Fremlejer\nNavn");
-        fremlejerFremleje.setMaxWidth(300);
-        fremlejerFremleje.setMinWidth(300);
-        fremlejerFremleje.setCellValueFactory(new PropertyValueFactory<>("fremlejer"));//Property need to match the class's field names
-
-        TableColumn<Fremleje, Date> slutDatoFremleje = new TableColumn<>("Fremleje\nSlutter");
-        slutDatoFremleje.setMaxWidth(125);
-        slutDatoFremleje.setMinWidth(125);
-        slutDatoFremleje.setCellValueFactory(new PropertyValueFactory<>("slutDato"));//Property need to match the class's field names
-
-
-        TableView fremlejeView = new TableView();
-        fremlejeView.setItems(getFremleje());
-        fremlejeView.getColumns().addAll(værelseFremleje,startDatoFremleje, fremlejetagerFremleje, slutDatoFremleje, fremlejerFremleje);
-        fremlejeView.setMaxSize(1080, 400);
-
-        VBox fremlejeTabMainLayout = new VBox(10, fremlejeLayoutLabel, fremlejeView, fremlejeTabCenterLayout);
+        VBox fremlejeTabMainLayout = new VBox(10, fremlejeLayoutLabel, fremlejeTableView, fremlejeTabCenterLayout);
         fremlejeTabMainLayout.setPadding(new Insets(20));
 
         Tab fremlejeTab = new Tab("Fremleje");
@@ -601,7 +532,6 @@ public class Main extends Application
         loginTilKlagerGridPane.getStyleClass().add("root-login");
         loginTilKlagerGridPane.setMaxHeight(210);
 
-
         Button opretKlageButton = new Button("Opret\nKlage");
         opretKlageButton.setOnAction(e-> PopUpsMenues.opretKlageOverBeboer("Opret klage over beboer"));
         opretKlageButton.getStyleClass().add("button-klage");
@@ -620,34 +550,16 @@ public class Main extends Application
         Label klageOverskrift1 = new Label("Klageoversigt:");
         klageOverskrift1.getStyleClass().add("label-hovedmenu");
 
-        TableColumn<KlageStatus, Integer> værelseKlageColumn = new TableColumn<>("Værelse");
-        værelseKlageColumn.setMaxWidth(75);
-        værelseKlageColumn.setMinWidth(75);
-        værelseKlageColumn.setCellValueFactory(new PropertyValueFactory<>("værelse"));//Property need to match the class's field names
-
-        TableColumn<KlageStatus, Integer> navnKlageColumn = new TableColumn<>("Navn");
-        navnKlageColumn.setMaxWidth(300);
-        navnKlageColumn.setMinWidth(200);
-        navnKlageColumn.setCellValueFactory(new PropertyValueFactory<>("navn"));//Property need to match the class's field names
-
-        TableColumn<KlageStatus, Integer> antalKlagerKlageColumn = new TableColumn<>("Antal\nKlager");
-        antalKlagerKlageColumn.setMaxWidth(125);
-        antalKlagerKlageColumn.setMinWidth(125);
-        antalKlagerKlageColumn.setCellValueFactory(new PropertyValueFactory<>("antalKlager"));//Property need to match the class's field names
-
-        TableView klagerTableView = new TableView();//Navn, værelse, antal klager
-        klagerTableView.setItems(getKlageStatus());
-        klagerTableView.getColumns().addAll(værelseKlageColumn,navnKlageColumn, antalKlagerKlageColumn);
-
-
         Button opretKlageButton2 = new Button("Opret\nKlage");
         opretKlageButton2.getStyleClass().add("button-klage");
         opretKlageButton2.setPrefSize(240,120);
         VBox rightLayoutKlagerTab2 = new VBox(opretKlageButton2);
         rightLayoutKlagerTab2.setPadding(new Insets(100,50,50,50));
 
+        TableView<KlageStatus> klageStatusTableView = new TableView<>();
+        tableViews.visKlageTableView(klageStatusTableView);
 
-        VBox leftLayoutKlagerTab2 = new VBox(10, klageOverskrift1, klagerTableView);
+        VBox leftLayoutKlagerTab2 = new VBox(10, klageOverskrift1, klageStatusTableView);
         HBox klagerTabMainLayout2 = new HBox(20,leftLayoutKlagerTab2, rightLayoutKlagerTab2);
         klagerTabMainLayout2.setPadding(new Insets(30));
 
@@ -657,40 +569,8 @@ public class Main extends Application
         Label protokolLabel = new Label("Protokol");
         protokolLabel.getStyleClass().add("label-hovedmenu");
 
-        TableColumn<Protokol, Date> datoProtokolColumn = new TableColumn<>("Dato:");
-        datoProtokolColumn.setMaxWidth(125);
-        datoProtokolColumn.setMinWidth(125);
-        datoProtokolColumn.setCellValueFactory(new PropertyValueFactory<>("dato"));//Property need to match the class's field names
-
-        TableColumn<Protokol, String> andenSalProtokolColumn = new TableColumn<>("2. sal:");
-        andenSalProtokolColumn.setMaxWidth(125);
-        andenSalProtokolColumn.setMinWidth(125);
-        andenSalProtokolColumn.setCellValueFactory(new PropertyValueFactory<>("andenSalTilstedeværelse"));//Property need to match the class's field names
-
-        TableColumn<Protokol, String> tredjeSalProtokolColumn = new TableColumn<>("3. sal:");
-        tredjeSalProtokolColumn.setMaxWidth(125);
-        tredjeSalProtokolColumn.setMinWidth(125);
-        tredjeSalProtokolColumn.setCellValueFactory(new PropertyValueFactory<>("tredjeSalTilstedeværelse"));//Property need to match the class's field names
-
-        TableColumn<Protokol, String> fjerdeSalProtokolColumn = new TableColumn<>("4. sal:");
-        fjerdeSalProtokolColumn.setMaxWidth(125);
-        fjerdeSalProtokolColumn.setMinWidth(125);
-        fjerdeSalProtokolColumn.setCellValueFactory(new PropertyValueFactory<>("fjerdeSalTilstedeværelse"));//Property need to match the class's field names
-
-        TableColumn<Protokol, String> femteSalProtokolColumn = new TableColumn<>("5. sal:");
-        femteSalProtokolColumn.setMaxWidth(125);
-        femteSalProtokolColumn.setMinWidth(125);
-        femteSalProtokolColumn.setCellValueFactory(new PropertyValueFactory<>("femteSalTilstedeværelse"));//Property need to match the class's field names
-
-        TableColumn<Protokol, String> sjetteSalProtokolColumn = new TableColumn<>("6. sal:");
-        sjetteSalProtokolColumn.setMaxWidth(125);
-        sjetteSalProtokolColumn.setMinWidth(125);
-        sjetteSalProtokolColumn.setCellValueFactory(new PropertyValueFactory<>("sjetteSalTilstedeværelse"));//Property need to match the class's field names
-
-        TableView protokolView = new TableView();
-        protokolView.setMaxSize(750,1000);
-        protokolView.setItems(getProtokol());
-        protokolView.getColumns().addAll(datoProtokolColumn, andenSalProtokolColumn, tredjeSalProtokolColumn, fjerdeSalProtokolColumn, femteSalProtokolColumn, sjetteSalProtokolColumn);
+        TableView<Protokol> protokolTableView = new TableView<>();
+        tableViews.visProtokolTableView(protokolTableView);
 
         Label dateProtokolLabel = new Label("    Vælg dato:");
         dateProtokolLabel.getStyleClass().add("label-login");
@@ -728,7 +608,7 @@ public class Main extends Application
         formandProtokolMainLayout.setVgap(5);
         formandProtokolMainLayout.setPadding(new Insets(7.5));
         formandProtokolMainLayout.add(protokolLabel,1,1,12,1);
-        formandProtokolMainLayout.add(protokolView,1,2,12,10);
+        formandProtokolMainLayout.add(protokolTableView,1,2,12,10);
         formandProtokolMainLayout.add(dateProtokolLabel,1,14);
         formandProtokolMainLayout.add(protokolDatePicker,1,15);
         formandProtokolMainLayout.add(andenSalRepræsentanterLabel,2,14);
@@ -899,32 +779,6 @@ public class Main extends Application
         else{
             alert.close();
         }
-    }
-    public ObservableList<Deadline> getReminder() {
-        ObservableList<Deadline> reminder = FXCollections.observableArrayList();// DER SKAL INKLUDERES ET LINJESKIFT EFER XXXX ANTAL ANSLAG
-        reminder.add(new Deadline("01/02/2017", "407 skal aflevere\n studiekontrol her"));
-        return reminder;
-    }
-    public ObservableList<VaerelsesUdlejning> getVærelsesUdlejning() {
-        ObservableList<VaerelsesUdlejning> værelsesUdlejning = FXCollections.observableArrayList();
-        //værelsesUdlejning.add(new VaerelsesUdlejning(404,new java.util.Date(2017,10,29)));
-        return værelsesUdlejning;
-    }
-
-    public ObservableList<Fremleje> getFremleje() {
-        ObservableList<Fremleje> fremleje = FXCollections.observableArrayList();
-        fremleje.add(new Fremleje(422, "Mette Frederiksen", "Jesper mikkelsen", new java.util.Date(2017, 10, 1), new java.util.Date(2017, 12, 31)));
-        return fremleje;
-    }
-    public ObservableList<KlageStatus> getKlageStatus(){
-        ObservableList<KlageStatus> klageStatus = FXCollections.observableArrayList();
-        klageStatus.add(new KlageStatus(403,"Mette Frederiksen",2));
-        return klageStatus;
-    }
-    public ObservableList<Protokol> getProtokol(){
-        ObservableList<Protokol> protokol = FXCollections.observableArrayList();
-        protokol.add(new Protokol(new Date(2017, 5,15), "Jessica","Mathias","Janus","Peter","Natali"));
-        return protokol;
     }
 }
 

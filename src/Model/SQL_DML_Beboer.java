@@ -13,7 +13,7 @@ import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 
 /**
- * Created by Ender on 30-05-2017.
+ * Created by Herlev Kollegiet Udvikler on 30-05-2017.
  */
 public class SQL_DML_Beboer
 {
@@ -179,6 +179,30 @@ public class SQL_DML_Beboer
             sqle.printStackTrace();
         }
 
+    }
+    public void printBrugerData(ResultSet resultSet)
+    {
+        try
+        {
+            int brugerId = resultSet.getInt("bruger_id");
+            String navn = resultSet.getString("Navn");
+            String email = resultSet.getString("Emailadresse");
+            String brugernavn = resultSet.getString("Brugernavn");
+            String password = resultSet.getString("Password");
+            String rolle = resultSet.getString("Rolle");
+
+            System.out.println("Bruger Id: " + brugerId);
+            System.out.println("Navn: " + navn);
+            System.out.println("Email: " + email);
+            System.out.println("Brugernavn: " + brugernavn);
+            System.out.println("Password: " + password);
+            System.out.println("Rolle: " + rolle);
+
+
+        }catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
     }
 
 }

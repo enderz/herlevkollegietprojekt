@@ -2,7 +2,7 @@ package Model;
 import java.util.Date;
 
 /**
- * Created by Janus on 18-05-2017.
+ * Created by Herlev Kollegiet Udvikler on 18-05-2017.
  */
 public class Protokol {
     private Date dato;

@@ -10,10 +10,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import static Model.Log.dbConnection;
-
 /**
- * Created by Ender on 30-05-2017.
+ * Created by Herlev Kollegiet Udvikler on 30-05-2017..
  */
 public class SQL_TableViewData
 {

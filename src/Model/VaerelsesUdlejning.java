@@ -3,7 +3,7 @@ package Model;
 import java.util.Date;
 
 /**
- * Created by Janus on 15-05-2017.
+ * Created by Herlev Kollegiet Udvikler on 07-05-2017..
  */
 public class VaerelsesUdlejning extends Vaerelse
 {

@@ -1,7 +1,7 @@
 package Model;
 
 /**
- * Created by Janus on 04-05-2017.
+ * Created by Herlev Kollegiet Udvikler on 04-05-2017.
  */
 
 //Get and set metoder for påmindelses/deadlines fanen

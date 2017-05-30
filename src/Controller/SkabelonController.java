@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 /**
- * Created by Daniel on 24-05-2017.
+ * Created by Herlev Kollegiet Udvikler on 24-05-2017.
  */
 public class SkabelonController implements ISkabelon
 {

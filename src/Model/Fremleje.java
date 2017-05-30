@@ -3,7 +3,7 @@ package Model;
 import java.util.Date;
 
 /**
- * Created by Janus on 16-05-2017.
+ * Created by Herlev Kollegiet Udvikler on 16-05-2017.
  */
 public class Fremleje {
 

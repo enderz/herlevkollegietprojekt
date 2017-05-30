@@ -1,5 +1,6 @@
-package View; /**
- * Created by Janus on 07-02-2017.
+package View;
+/**
+ * Created by Herlev Kollegiet Udvikler on 12-05-2017.
  */
 import Model.Beboer;
 import Model.Log;
@@ -125,22 +126,6 @@ public class PopUpsMenues
         window.setScene(scene);
         window.showAndWait();
 
-    }
-    public void beboerOkAlert() {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setHeaderText(null);
-        alert.setTitle("Beboer Info");
-        alert.setContentText("Beboer oprettet korrekt.");
-        Log.insertIntoLog("Beboer oprettet");
-        alert.show();
-    }
-    public void beboerOpdateretOKAlert(){
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setHeaderText(null);
-        alert.setTitle("Beboer Opdatering Info");
-        alert.setContentText("Beboer er opdateret korrekt.");
-        Log.insertIntoLog("Beboer Opdateret");
-        alert.show();
     }
     /**
      * @param conn opretter database connection
@@ -404,17 +389,13 @@ public class PopUpsMenues
         //Center Layout
         Separator separator2 = new Separator();
         separator2.setOrientation(Orientation.VERTICAL);
-
-
         //Right Layout
-
         Label månedsLabelRight = new Label("Vælg måned:");
         ChoiceBox igangværendeStudiekontrollerChoicceBoxRight = new ChoiceBox(FXCollections.observableArrayList(
                 "Januar", "Februar", "Marts","April","Maj","Juni","Juli","August","September","Oktober","November", "December")
         );
         Button afslutStudiekontrolButton = new Button("Afslut\nStudiekontrol");
         afslutStudiekontrolButton.getStyleClass().add("button-afslut-studiekontrol");
-
 
         VBox topLayout = new VBox(10,igangværendeStudiekontrollerLabel, igangværendeStudiekontrollerTableView, separator1);
         GridPane leftLayout = new GridPane();
@@ -452,8 +433,6 @@ public class PopUpsMenues
 
         //LAYOUT TIL GODKENDT FREMLEJE
         Label overskriftDispensationLabel1 = new Label("Brug denne side hvis du ønsker at give dispensation til en beboer.\nHvis du ønsker at give afslag på dispensationsansøgning så skift i toppen");
-
-
 
         Label ansøgerensNavnLabel = new Label("Ansøgerens navn:");
         TextField ansøgernavnText = new TextField();
@@ -596,7 +575,6 @@ public class PopUpsMenues
         scene.getStylesheets().add("PopupsLayout.css");
         window.setScene(scene);
         window.showAndWait();
-
     }
     public static void redigerIDispensation(String title) {
         Stage window = new Stage();
@@ -701,7 +679,6 @@ public class PopUpsMenues
         BorderPane layout = new BorderPane();
         layout.setCenter(layoutredigerIDisp);
 
-
         Scene scene = new Scene(layout);
         scene.getStylesheets().add("PopupsLayout.css");
         window.setScene(scene);
@@ -714,7 +691,6 @@ public class PopUpsMenues
         window.initModality(Modality.APPLICATION_MODAL);
         window.setTitle(title);
         window.setMinWidth(250);
-
 
         //LAYOUT TIL GODKENDT FREMLEJE
         Label overskriftFremlejeLabel1 = new Label("Brug denne side hvis du ønsker at tildele indstillingens accept i forbindelse med fremleje.\nHvis du ønsker at Indstillingen modsætter sig fremlejet, så skift i toppen");
@@ -771,9 +747,7 @@ public class PopUpsMenues
         Tab godkendFremlejeTab = new Tab("Lav Dispensation");
         godkendFremlejeTab.setContent(layoutGodkendtFremleje);
         godkendFremlejeTab.setClosable(false);
-
         //AFSLAG PÅ DISPENSATION layout
-
         Label overskriftDispensationLabel2 = new Label("Brug denne side hvis du ønsker at give afslag på dispensationansøgning til en beboer.\nHvis du ønsker at tildele dispensation på dispensationsansøgning så skift i toppen.");
 
         Label ansøgerensNavnLabel2 = new Label("Ansøgerens navn:");
@@ -827,7 +801,6 @@ public class PopUpsMenues
         scene.getStylesheets().add("PopupsLayout.css");
         window.setScene(scene);
         window.showAndWait();
-
     }
     public static void redigerIFremleje(String title)
     {
@@ -905,7 +878,6 @@ public class PopUpsMenues
         scene.getStylesheets().add("PopupsLayout.css");
         window.setScene(scene);
         window.showAndWait();
-
     }
     public static void opretKlageOverBeboer(String title) {
         Stage window = new Stage();

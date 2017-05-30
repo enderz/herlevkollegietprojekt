@@ -2,7 +2,7 @@ package Model;
 
 import java.sql.*;
 /**
- * Created by Ender on 07-05-2017.
+ * Created by Herlev Kollegiet Udvikler on 07-05-2017.
  */
 public class DBConnection {
 

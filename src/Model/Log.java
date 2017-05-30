@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import java.util.Date;
 
 /**
- * Created by Ender on 29-05-2017.
+ * Created by Herlev Kollegiet Udvikler on 29-05-2017.
  */
 public class Log {
 

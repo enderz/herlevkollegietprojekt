@@ -1,16 +1,16 @@
 package Controller;
 
-import Model.SQLStatements;
+import Model.SQL_DML_Beboer;
 import javafx.scene.control.TextField;
 
 import java.sql.*;
 /**
- * Created by Ender on 15-05-2017.
+ * Created by Herlev Kollegiet Udvikler on 15-05-2017.
  */
 public class LoginFunktion implements ILoginFunktion {
 
     ResultSet resultSet;
-    SQLStatements sqlStmt = new SQLStatements();
+    SQL_DML_Beboer sql_dml_beboer = new SQL_DML_Beboer();
     PreparedStatement preparedStatement;
 
     @Override
@@ -27,7 +27,7 @@ public class LoginFunktion implements ILoginFunktion {
             {
                 System.out.println("Bruger fundet!");
                 passwordInput.clear();
-                sqlStmt.printBrugerData(resultSet);
+                sql_dml_beboer.printBrugerData(resultSet);
                 fundet = true;
                 return fundet;
             }else{

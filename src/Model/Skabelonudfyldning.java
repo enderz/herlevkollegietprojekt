@@ -5,7 +5,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 /**
- * Created by Daniel on 23-05-2017.
+ * Created by Herlev Kollegiet Udvikler on 23-05-2017..
  */
 public class Skabelonudfyldning {
     private ArrayList<String> keyWords = new ArrayList();

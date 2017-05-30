@@ -1,7 +1,7 @@
 package Model;
 
 /**
- * Created by Ender on 08-05-2017.
+ * Created by Herlev Kollegiet Udvikler on 08-05-2017.
  */
 public class Bruger {
 

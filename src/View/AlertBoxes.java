@@ -3,11 +3,10 @@ package View;
 import Model.Log;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
-
 import java.util.Optional;
 
 /**
- * Created by Ender on 30-05-2017.
+ * Created by Herlev Kollegiet Udvikler on 30-05-2017.
  */
 public class AlertBoxes
 {
@@ -19,7 +18,6 @@ public class AlertBoxes
         Log.insertIntoLog("Fejl i login.");
         alert.show();
     }
-
     public void beboerOkAlert() {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setHeaderText(null);

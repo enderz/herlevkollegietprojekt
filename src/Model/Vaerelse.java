@@ -1,6 +1,6 @@
 package Model;
 /**
- * Created by Ender on 15-05-2017.
+ * Created by Herlev Kollegiet Udvikler on 12-05-2017.
  */
 public class Vaerelse
 {

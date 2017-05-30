@@ -3,7 +3,7 @@ package Model;
 import java.util.Date;
 
 /**
- * Created by Ender on 05-05-2017.
+ * Created by Herlev Kollegiet Udvikler on 05-05-2017.
  */
 public class Beboer {
 
