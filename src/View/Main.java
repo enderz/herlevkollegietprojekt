@@ -202,9 +202,10 @@ public class Main extends Application
         Label værelsesudlejningLabel = new Label("Værelser til udlejning:");
         værelsesudlejningLabel.getStyleClass().add("label-hovedmenu");
 
-        TableView<VaerelsesUdlejning> vaerelsesUdlejningTableView = new TableView<>();
-        tableViews.visLedigeVaerelserTableView(vaerelsesUdlejningTableView);
+        TableView<VaerelsesUdlejning> ledigVaerelseView = new TableView<>();
+        tableViews.visLedigeVaerelserTableView(ledigVaerelseView);
         //TAB 2
+        TableView<VaerelsesUdlejning> vaerelsesUdlejningTableView = new TableView<>();
         tableViews.visVaerelsesUdlejningTableVew(vaerelsesUdlejningTableView);
 
         Button buttonTilføjLedigtVærelse = new Button("Tilføj Værelse");
@@ -218,7 +219,7 @@ public class Main extends Application
 
         Tab ledigeVærelserTab = new Tab("Ledige værelser");
         BorderPane tab1LedigtVærelseBorderPane = new BorderPane();
-        tab1LedigtVærelseBorderPane.setCenter(vaerelsesUdlejningTableView);
+        tab1LedigtVærelseBorderPane.setCenter(ledigVaerelseView);
         tab1LedigtVærelseBorderPane.setBottom(bottomLeftLayoutTab1);
         tab1LedigtVærelseBorderPane.setPrefSize(430, 370);
         ledigeVærelserTab.setContent(tab1LedigtVærelseBorderPane);
@@ -274,7 +275,7 @@ public class Main extends Application
         Button påbegyndStudiekontrolButton = new Button("Påbegynd\nstudiekontrol");
         påbegyndStudiekontrolButton.getStyleClass().add("button-paabegynd-studiekontrol");
         påbegyndStudiekontrolButton.setOnAction(e -> {
-            popUpsMenues.påbegyndStudieKontrol("Påbegynd Studiekontrol");
+            popUpsMenues.påbegyndStudieKontrol(conn);
 
             });
 

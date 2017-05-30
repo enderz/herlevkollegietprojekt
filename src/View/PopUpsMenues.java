@@ -296,17 +296,16 @@ public class PopUpsMenues
         window.showAndWait();
     }
 
-    public static void påbegyndStudieKontrol(String title) {
+    public void påbegyndStudieKontrol(Connection conn) {
         Stage window = new Stage();
 
         window.initModality(Modality.APPLICATION_MODAL);
-        window.setTitle(title);
+        window.setTitle("Påbegynd StudieKontrol");
         window.setMinWidth(250);
 
-        ArrayList skabelonText = new ArrayList();
-
         Label vælgMånedDerUdføresStudiekontrolForLabel = new Label("Vælg indflytningsmåned/måned for afslutning\naf studier der skal udføres studiekontrol for:");
-        ChoiceBox hvilkenMånedDerPåbegyndesStudiekontrolForChoiceBox = new ChoiceBox(FXCollections.observableArrayList(
+        ChoiceBox paabegyndstudiekontrolMaaned =
+                new ChoiceBox(FXCollections.observableArrayList(
                 "Januar", "Februar", "Marts", "April", "Maj", "Juni", "Juli", "August", "September", "Oktober", "November", "December")
         );
 
@@ -326,11 +325,10 @@ public class PopUpsMenues
         Separator separator = new Separator();
         Separator separator2 = new Separator();
 
-
         Button påbegyndStudieKontrolButton = new Button("Påbegynd\nstudiekontrol");
         påbegyndStudieKontrolButton.getStyleClass().add("button-paabegynd-studiekontrol");
-        påbegyndStudieKontrolButton.setOnAction(event -> {
-
+        påbegyndStudieKontrolButton.setOnAction((ActionEvent event) -> {
+            sql_dml_beboer.paaBegyndKontrol(window,conn,paabegyndstudiekontrolMaaned);
         });
 
         GridPane topLayout = new GridPane();
@@ -338,7 +336,7 @@ public class PopUpsMenues
         topLayout.setHgap(10);
         topLayout.setPadding(new Insets(0, 0, 10, 0));
         topLayout.add(vælgMånedDerUdføresStudiekontrolForLabel, 1, 1);
-        topLayout.add(hvilkenMånedDerPåbegyndesStudiekontrolForChoiceBox, 1, 2);
+        topLayout.add(paabegyndstudiekontrolMaaned, 1, 2);
         topLayout.add(studiekontrolStartDatoLabel, 1, 4);
         topLayout.add(studiekontrolStartDatoDatePicker, 1, 5);
         topLayout.add(separator, 1, 6, 2, 1);

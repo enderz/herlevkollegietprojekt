@@ -2,6 +2,7 @@ package Model;
 
 import View.AlertBoxes;
 import javafx.collections.ObservableList;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
@@ -179,6 +180,21 @@ public class SQL_DML_Beboer
             sqle.printStackTrace();
         }
 
+    }
+    public void paaBegyndKontrol(Stage window, Connection conn, ChoiceBox maaned)
+    {
+        try{
+            String updateKontrolSQL = "UPDATE Beboer SET KontrolStatus='' WHERE SlutStudieMaaned='"+maaned.getValue()+"'";
+
+            System.out.println(updateKontrolSQL);
+            preparedStatement = conn.prepareStatement(updateKontrolSQL);
+            preparedStatement.executeUpdate();
+            preparedStatement.close();
+            //alertBoxes.beboerOpdateretOKAlert();
+            window.close();
+        }catch (SQLException sqle){
+            sqle.printStackTrace();
+        }
     }
     public void printBrugerData(ResultSet resultSet)
     {
