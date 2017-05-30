@@ -89,7 +89,7 @@ public class SkabelonController implements ISkabelon
 
     public void openFile(String fileName)
     {
-        File file = new File("C:\\Users\\Ender\\Desktop\\Projekt\\" + fileName);
+        File file = new File("C:\\Users\\Ender\\Dropbox\\2.Semester_Afleveringer\\Projekt2017\\Blanketer\\"+fileName);
 
         if (file.exists())
         {

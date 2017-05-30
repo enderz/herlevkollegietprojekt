@@ -1,6 +1,6 @@
 package View;
 
-import Controller.TestController;
+import Controller.SkabelonController;
 import Model.*;
 import Controller.LoginFunktion;
 
@@ -13,6 +13,11 @@ import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
@@ -21,6 +26,9 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import java.awt.*;
+import java.io.File;
+import java.io.IOException;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.*;
@@ -35,14 +43,16 @@ public class Main extends Application
     Scene sceneLogin, sceneStart, sceneStudiekontrol, sceneBeboerListe, sceneFormand, sceneIndstillingsskabeloner;
     DBConnection dbConnection = new DBConnection();
     LoginFunktion loginFunk = new LoginFunktion();
-    PopUps popUps = new PopUps();
+    PopUpsMenues popUpsMenues = new PopUpsMenues();
+    TableViews tableViews = new TableViews();
+    SQL_TableViewData sql_tableViewData  = new SQL_TableViewData();
+    SkabelonController skabelonController = new SkabelonController();
+    AlertBoxes alertBoxes = new AlertBoxes();
     Connection conn;
     PreparedStatement preparedStatement;
     ResultSet resultSet;
     TableView<Beboer> beboerListe;
     final ObservableList<Beboer> beboerData = FXCollections.observableArrayList();
-
-    TestController testController = new TestController();
 
     public static void main(String[] args)
     {
@@ -83,8 +93,6 @@ public class Main extends Application
         loginButton.setOnAction((ActionEvent event) -> {
             if(loginFunk.login(conn, nameInput, passwordInput)==true){
                try{
-                   //HovedMenuView hovedMenuView = new HovedMenuView();
-                   //hovedMenuView.startHovedMenu(window);
                    startHovedMenu(window);
                    Log.insertIntoLog(nameInput.getText()+" logget ind");
 
@@ -92,10 +100,9 @@ public class Main extends Application
                     e.printStackTrace();
                 }
             }else{
-                loginAlert();
+                alertBoxes.loginAlert();
             }
         });
-
         Button annullerButton  = new Button("Annuller");
         GridPane.setConstraints(annullerButton,1,3);
         annullerButton.setOnAction(e -> {
@@ -108,15 +115,13 @@ public class Main extends Application
         sceneLogin.setOnKeyPressed(event -> {
             if(loginFunk.login(conn, nameInput, passwordInput)==true){
                 try{
-                    //HovedMenuView hovedMenuView = new HovedMenuView();
-                    //hovedMenuView.startHovedMenu(window);
                     startHovedMenu(window);
                     Log.insertIntoLog(nameInput.getText()+" logget ind");
                 }catch (Exception e){
                     e.printStackTrace();
                 }
             }else{
-                loginAlert();
+                alertBoxes.loginAlert();
             }
         });
 
@@ -135,29 +140,31 @@ public class Main extends Application
         window.getIcons().add(new Image("HeKoLogo.png")); // HER SKAL HEKO LOGO VÆRE
 
         //VENSTRE DEL AF HOVEDMENUEN
-        //Buttons...
+        //StudieKontrol-Button.
         Button studiekontrolButton = new Button("Studiekontrol");
         studiekontrolButton.getStyleClass().add("button-hovedmenu");
         studiekontrolButton.setOnAction(e -> {
             window.setScene(sceneStudiekontrol);
-            visStudieKontrolBeboer();
+            sql_tableViewData.visStudieKontrolBeboer(conn);
         });
-
+        //Beboer-Liste Button.
         Button beboerListeButton = new Button("Beboer-Liste");
         beboerListeButton.getStyleClass().add("button-hovedmenu");
         beboerListeButton.setOnAction((ActionEvent event) -> {
             window.setScene(sceneBeboerListe);
-            visAlleBeboer();
+            sql_tableViewData.visAlleBeboer(conn);
         });
-
+        //Formand Button.
         Button formandButton = new Button("Formanden");
         formandButton.getStyleClass().add("button-hovedmenu");
         formandButton.setOnAction(e-> window.setScene(sceneFormand));
 
+        //Indstllingsskabeloner Button.
         Button indstillingsSkabelonerButton = new Button("Indstillingsskabeloner");
         indstillingsSkabelonerButton.getStyleClass().add("button-hovedmenu");
         indstillingsSkabelonerButton.setOnAction(e-> window.setScene(sceneIndstillingsskabeloner));
 
+        //Logud Button.
         Button logoutButton = new Button("Log ud");
         logoutButton.getStyleClass().add("button-hovedmenu");
         logoutButton.setOnAction(e ->{
@@ -198,7 +205,7 @@ public class Main extends Application
         //Buttons tilføjes til HBox for horisontal placering
         Button tilfoejButton = new Button("Tilføj Deadline");
         tilfoejButton.getStyleClass().add("button-tilfoej");
-        tilfoejButton.setOnAction(e -> popUps.tilføjDeadline("Tilføj Deadline", "Lort"));
+        tilfoejButton.setOnAction(e -> popUpsMenues.tilføjDeadline("Tilføj Deadline", "Lort"));
 
         Button fjernButton = new Button("Fjern Deadline");
         fjernButton.getStyleClass().add("button-fjern");
@@ -292,22 +299,28 @@ public class Main extends Application
         sceneStart.getStylesheets().add("Layout.css");
 
         //STUDIEKONTROL-MENUEN
-        //Buttons
+        //Tilbage til Menu-Button.
         Button tilbagebutton1 = new Button("Tilbage til Menu");
         tilbagebutton1.setOnAction(e -> window.setScene(sceneStart));
 
+        //Opdater BeboerInfo-Button i Studiekontrol
         Button opdaterBeboerButton = new Button("Opdater\nBeboerInfo");
         opdaterBeboerButton.getStyleClass().add("button-opdater-medlem");
-        opdaterBeboerButton.setOnAction(e -> popUps.opdaterStudieKontrolInfo(conn));
+        opdaterBeboerButton.setOnAction(e -> popUpsMenues.opdaterStudieKontrolInfo(conn));
         opdaterBeboerButton.setPrefSize(172, 105);
 
+        //Påbegynd studiekontrol-Button.
         Button påbegyndStudiekontrolButton = new Button("Påbegynd\nstudiekontrol");
         påbegyndStudiekontrolButton.getStyleClass().add("button-paabegynd-studiekontrol");
-        påbegyndStudiekontrolButton.setOnAction(e -> popUps.påbegyndStudieKontrol("Påbegynd Studiekontrol"));
+        påbegyndStudiekontrolButton.setOnAction(e -> {
+            popUpsMenues.påbegyndStudieKontrol("Påbegynd Studiekontrol");
 
+            });
+
+        //Rediger/afslut studuikontrol-Button.
         Button redigerAfslutStudiekontrolButton = new Button("Rediger/afslut\nStudiekontrol");
         redigerAfslutStudiekontrolButton.getStyleClass().add("button-rediger-afslut-studiekontrol");
-        redigerAfslutStudiekontrolButton.setOnAction(e -> popUps.redigerAfslutStudiekontrol("button-rediger-afslut-studiekontrol"));
+        redigerAfslutStudiekontrolButton.setOnAction(e -> popUpsMenues.redigerAfslutStudiekontrol("button-rediger-afslut-studiekontrol"));
         redigerAfslutStudiekontrolButton.setPrefSize(172, 105);
 
         //menubar and Menu
@@ -315,9 +328,7 @@ public class Main extends Application
         Menu menuVis = new Menu("_Vis");
         MenuBar menuBar = new MenuBar(menuVis, menuHelp);
 
-        //TableView med studiekontrol informationer
-        //studieKontrolListe = new TableView<>();
-        //Center Layout of StudiekontrolMenu
+       //Center Layout of StudiekontrolMenu
         TabPane centerLayout = new TabPane();
         centerLayout.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
 
@@ -336,19 +347,19 @@ public class Main extends Application
         Tab tabDec = new Tab("December");
 
         centerLayout.setTabMinWidth(60);
-        tabAlle.setContent(visStudieKontrolBeboer());
-        tabJan.setContent(visStudieKontrolMaaned("Godkendt", "Januar"));
-        tabFeb.setContent(visStudieKontrolMaaned("Godkendt", "Februar"));
-        tabMart.setContent(visStudieKontrolMaaned("Godkendt","Marts"));
-        tabApr.setContent(visStudieKontrolMaaned("Godkendt","April"));
-        tabMaj.setContent(visStudieKontrolMaaned("Godkendt","Maj"));
-        tabJuni.setContent(visStudieKontrolMaaned("Godkendt","Juni"));
-        tabJuli.setContent(visStudieKontrolMaaned("Godkendt","Juli"));
-        tabAug.setContent(visStudieKontrolMaaned("Godkendt","August"));
-        tabSep.setContent(visStudieKontrolMaaned("Godkendt","September"));
-        tabOkt.setContent(visStudieKontrolMaaned("Godkendt","Oktober"));
-        tabNov.setContent(visStudieKontrolMaaned("Godkendt","November"));
-        tabDec.setContent(visStudieKontrolMaaned("Godkendt","December"));
+        tabAlle.setContent(sql_tableViewData.visStudieKontrolBeboer(conn));
+        tabJan.setContent(sql_tableViewData.visStudieKontrolMaaned(conn,"Godkendt", "Januar"));
+        tabFeb.setContent(sql_tableViewData.visStudieKontrolMaaned(conn,"Godkendt", "Februar"));
+        tabMart.setContent(sql_tableViewData.visStudieKontrolMaaned(conn,"Godkendt","Marts"));
+        tabApr.setContent(sql_tableViewData.visStudieKontrolMaaned(conn,"Godkendt","April"));
+        tabMaj.setContent(sql_tableViewData.visStudieKontrolMaaned(conn,"Godkendt","Maj"));
+        tabJuni.setContent(sql_tableViewData.visStudieKontrolMaaned(conn,"Godkendt","Juni"));
+        tabJuli.setContent(sql_tableViewData.visStudieKontrolMaaned(conn,"Godkendt","Juli"));
+        tabAug.setContent(sql_tableViewData.visStudieKontrolMaaned(conn,"Godkendt","August"));
+        tabSep.setContent(sql_tableViewData.visStudieKontrolMaaned(conn,"Godkendt","September"));
+        tabOkt.setContent(sql_tableViewData.visStudieKontrolMaaned(conn,"Godkendt","Oktober"));
+        tabNov.setContent(sql_tableViewData.visStudieKontrolMaaned(conn,"Godkendt","November"));
+        tabDec.setContent(sql_tableViewData.visStudieKontrolMaaned(conn,"Godkendt","December"));
 
         tabAlle.getStyleClass().add("tab-studiekontrol");
         centerLayout.getTabs().addAll(tabAlle, tabJan, tabFeb, tabMart, tabApr, tabMaj, tabJuni, tabJuli, tabAug, tabSep, tabOkt, tabNov, tabDec);
@@ -356,7 +367,6 @@ public class Main extends Application
         //Left Layout of StudiekontrolMenu
         VBox leftLayout = new VBox(10, tilbagebutton1);
         leftLayout.setPadding(new Insets(10));
-
 
         //Right Layout of StudiekontrolMenu
         VBox rightLayout = new VBox(15, opdaterBeboerButton, påbegyndStudiekontrolButton, redigerAfslutStudiekontrolButton);
@@ -381,23 +391,23 @@ public class Main extends Application
         sceneStudiekontrol = new Scene(borderPane);
         sceneStudiekontrol.getStylesheets().add("Layout.css");
 
-
         //BEBOERLISTE MENU
-        //Buttons
+        //Tilbage til Menu - Button.
         Button tilbageButton2 = new Button("Tilbage til Menu");
         tilbageButton2.setOnAction(e -> window.setScene(sceneStart));
 
+        //Opret ny beboer - Button.
         Button opretNyBeboerButton = new Button("Opret ny\nbeboer");
         opretNyBeboerButton.getStyleClass().add("button-opdater-medlem");
         opretNyBeboerButton.setMinWidth(150);
         opretNyBeboerButton.setOnAction(event -> {
-            popUps.opretBeboer(conn, beboerListe, beboerData);
-            //testController.opretBeboerButtonClick();
+            popUpsMenues.opretBeboer(conn, beboerListe, beboerData);
 
         });
+        //Opdater Beboerinfo - Button i Beboer-Liste Menu.
         Button opdaterBeboerButton2 = new Button("Opdater \nBeboerinfo");
         opdaterBeboerButton2.getStyleClass().add("button-paabegynd-studiekontrol");
-        opdaterBeboerButton2.setOnAction(e -> popUps.opdaterBeboerInfo(conn));
+        opdaterBeboerButton2.setOnAction(e -> popUpsMenues.opdaterBeboerInfo(conn));
 
         //menubar and Menu
         Menu menuHelpBeboerListe = new Menu("_Hjælp");
@@ -419,12 +429,13 @@ public class Main extends Application
         Tab tab6Sal = new Tab("6. sal");
 
         centerBeboerlisteLayout.setTabMinWidth(60);
-        tabAlleBeboere.setContent(visAlleBeboer());
-        tab2Sal.setContent(visSal(200,300));
-        tab3Sal.setContent(visSal(300,400));
-        tab4Sal.setContent(visSal(400,500));
-        tab5Sal.setContent(visSal(500,600));
-        tab6Sal.setContent(visSal(600,700));
+        tabAlleBeboere.setContent(sql_tableViewData.visAlleBeboer(conn));
+        //Sortetring efter værelses nummer med given intervaller...
+        tab2Sal.setContent(sql_tableViewData.visSal(conn,200,300));
+        tab3Sal.setContent(sql_tableViewData.visSal(conn,300,400));
+        tab4Sal.setContent(sql_tableViewData.visSal(conn,400,500));
+        tab5Sal.setContent(sql_tableViewData.visSal(conn,500,600));
+        tab6Sal.setContent(sql_tableViewData.visSal(conn,600,700));
         centerBeboerlisteLayout.getTabs().addAll(tabAlleBeboere, tab2Sal, tab3Sal, tab4Sal, tab5Sal, tab6Sal);
 
         //Left Layout of beboerListeMenu
@@ -478,13 +489,13 @@ public class Main extends Application
         //TabDispensation
         Button redigerDispensationButton = new Button("Rediger i\nDispensation\n (Kun for formanden)");
         redigerDispensationButton.getStyleClass().add("button-rediger-dispensation");
-        redigerDispensationButton.setOnAction(e-> PopUps.redigerIDispensation("Rediger i dispensation"));
+        redigerDispensationButton.setOnAction(e-> PopUpsMenues.redigerIDispensation("Rediger i dispensation"));
 
         Button fjernDispensationButton = new Button("Fjern \nDispensation\n(Kun for formanden)");
         fjernDispensationButton.getStyleClass().add("button-afslut-dispensation");
 
         Button svarPåDispensationButton = new Button("Svar på\nDispensationsansøgning\n(kun for formanden)");
-        svarPåDispensationButton.setOnAction(e-> PopUps.svarPåDispensation("Svar på Dispensationsansøgning"));
+        svarPåDispensationButton.setOnAction(e-> PopUpsMenues.svarPåDispensation("Svar på Dispensationsansøgning"));
         svarPåDispensationButton.getStyleClass().add("button-svar-paa-dispensation");
         svarPåDispensationButton.setPrefSize(240, 135);
 
@@ -496,7 +507,7 @@ public class Main extends Application
         dispensationLayoutLabel.getStyleClass().add("label-hovedmenu");
 
         TableView<Dispensation> dispensationsView = new TableView<>();
-        visDispensationsTableView(dispensationsView);
+        tableViews.visDispensationsTableView(dispensationsView);
 
         VBox dispensationsTabMainLayout = new VBox(10, dispensationLayoutLabel, dispensationsView, dispensationTabCenterLayout);
         dispensationsTabMainLayout.setPadding(new Insets(20));
@@ -507,16 +518,15 @@ public class Main extends Application
 
 
         //FremlejeTab på FormandsMenu
-
         Button redigerFremlejeButton = new Button("Rediger i\nFremleje\n (Kun for formanden)");
         redigerFremlejeButton.getStyleClass().add("button-rediger-dispensation");
-        redigerFremlejeButton.setOnAction(e->PopUps.redigerIFremleje("Rediger i Ellers Godkendt fremleje"));
+        redigerFremlejeButton.setOnAction(e-> PopUpsMenues.redigerIFremleje("Rediger i Ellers Godkendt fremleje"));
 
         Button fjernFremlejeButton = new Button("Fjern \nFremleje\n(Kun for formanden)");
         fjernFremlejeButton.getStyleClass().add("button-afslut-dispensation");
 
         Button svarPåFremlejeButton = new Button("Svar på\nFremlejeansøgning\n(kun for formanden)");
-        svarPåFremlejeButton.setOnAction(e->PopUps.svarPåFremleje("Svar på Fremlejeansøgning"));
+        svarPåFremlejeButton.setOnAction(e-> PopUpsMenues.svarPåFremleje("Svar på Fremlejeansøgning"));
         svarPåFremlejeButton.getStyleClass().add("button-svar-paa-dispensation");
         svarPåFremlejeButton.setPrefSize(240, 135);
 
@@ -593,7 +603,7 @@ public class Main extends Application
 
 
         Button opretKlageButton = new Button("Opret\nKlage");
-        opretKlageButton.setOnAction(e-> PopUps.opretKlageOverBeboer("Opret klage over beboer"));
+        opretKlageButton.setOnAction(e-> PopUpsMenues.opretKlageOverBeboer("Opret klage over beboer"));
         opretKlageButton.getStyleClass().add("button-klage");
         opretKlageButton.setPrefSize(240,120);
         VBox rightLayoutKlagerTab1 = new VBox(opretKlageButton);
@@ -760,29 +770,50 @@ public class Main extends Application
         klageSkabelonerLabel.getStyleClass().add("label-skabeloner");
         Button skabelonKlageForSenDokumentationButton = new Button("Klageskabelon forsent afleveret studiedokumentation");
         skabelonKlageForSenDokumentationButton.getStyleClass().add("button-skabeloner");
+        skabelonKlageForSenDokumentationButton.setOnAction(e->{
+            skabelonController.openFile("Klage_For_sen_studie_dokumentation.docx");
+        });
         Button skabelonKlagerÆndringerButton = new Button("Klageskabelon for ikke at orientere om Studieændringer");
         skabelonKlagerÆndringerButton.getStyleClass().add("button-skabeloner");
+        skabelonKlagerÆndringerButton.setOnAction(e->{
+            skabelonController.openFile("Klage Studieændringer manglende orientering.docx");
+        });
         //2) Fremleje
         Label fremlejeSkabelonLabel = new Label("Fremleje:");
         fremlejeSkabelonLabel.getStyleClass().add("label-skabeloner");
         Button skabelonFremlejerButton = new Button("Fremleje");
         skabelonFremlejerButton.getStyleClass().add("button-skabeloner");
+        skabelonFremlejerButton.setOnAction(e->{
+           skabelonController.openFile("Fremleje");
+        });
         Button typeformularU1991FremlejeButton = new Button("Typeformular(U1991) til fremleje");
         typeformularU1991FremlejeButton.getStyleClass().add("button-skabeloner");
+        typeformularU1991FremlejeButton.setOnAction(e->{
+            skabelonController.openFile("typeformularU1991.pdf");
+        });
         //3) Dispensation
         Label dispensationSkabelonLabel = new Label("Dispensation:");
         dispensationSkabelonLabel.getStyleClass().add("label-skabeloner");
         Button skabelonDispensationButton = new Button("Dispensation");
         skabelonDispensationButton.getStyleClass().add("button-skabeloner");
+        skabelonDispensationButton.setOnAction(e->{
+            skabelonController.openFile("Dispensation");
+        });
         //4) Studiekontrol//Følgeseddel //'påmindelser' //Studiekontrol der kan laves i hånden
         Label studiekontrolSkabelonerLabel = new Label("Studiekontrol");
         studiekontrolSkabelonerLabel.getStyleClass().add("label-skabeloner");
         Button skabelonStudiekontrolBlanketButton = new Button("Studiekontrolsblanket til Udfyldning");
         skabelonStudiekontrolBlanketButton.getStyleClass().add("button-skabeloner");
+        skabelonStudiekontrolBlanketButton.setOnAction(e->{
+           skabelonController.openFile("Studiekontrolsblanket.docx");
+        });
         Button skabelonStudiekontrolFølgeseddelBlanketButton = new Button("Følgeseddel til studiekontrol");
         skabelonStudiekontrolFølgeseddelBlanketButton.getStyleClass().add("button-skabeloner");
         Button skabelonStudiekontrolPåmindelseButton = new Button("Påmindelse om studiekontrol");
         skabelonStudiekontrolPåmindelseButton.getStyleClass().add("button-skabeloner");
+        skabelonStudiekontrolPåmindelseButton.setOnAction(e->{
+            skabelonController.openFile("Påmindelsesseddel-om-studiekontrol.docx");
+        });
         Button skabelonStudiekontrolBlanketTilMapperButton = new Button("Studiekontrolsblanket til Repræsentanternes Mapper");
         skabelonStudiekontrolBlanketTilMapperButton.getStyleClass().add("button-skabeloner");
         Button uoverensstemmelseIOplysningerButton = new Button("Uoverensstemmelse i Oplysninger ifbm. studiekontrol");
@@ -799,6 +830,9 @@ public class Main extends Application
         ansøgningsksemaSkabelonLabel.getStyleClass().add("label-skabeloner");
         Button ansøgningsskemaSkabelonButton = new Button("Ansøgningsskema");
         ansøgningsskemaSkabelonButton.getStyleClass().add("button-skabeloner");
+        ansøgningsskemaSkabelonButton.setOnAction(e->{
+            skabelonController.openFile("Ansøgningsskema.docx");
+        });
 
         //7) Brevpapir
         Label brevpapirSkabelonLabel = new Label("Brevpapir:");
@@ -811,6 +845,9 @@ public class Main extends Application
         andetSkabelonerLabel.getStyleClass().add("label-skabeloner");
         Button indstillingsreglerButton = new Button("Indstillingsregler");
         indstillingsreglerButton.getStyleClass().add("button-skabeloner");
+        indstillingsreglerButton.setOnAction(e->{
+            skabelonController.openFile("Indstllingsregler.docx");
+        });
         //9)(Links til lovgivning) - andre ting
 
         GridPane indstillingsskabelonerPane = new GridPane();
@@ -849,14 +886,6 @@ public class Main extends Application
         window.setScene(sceneStart);
         window.show();
     }
-    private void loginAlert() {
-        Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setHeaderText(null);
-        alert.setTitle("Login Status");
-        alert.setContentText("Login Fejlet!\nBruger findes ikke. Prøv igen.");
-        Log.insertIntoLog("Fejl i login.");
-        alert.show();
-    }
     private void logoutAlert(){
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setHeaderText(null);
@@ -871,10 +900,6 @@ public class Main extends Application
             alert.close();
         }
     }
-    public ObservableList<Beboer> getBeboer() {
-        ObservableList<Beboer> beboer = FXCollections.observableArrayList();
-        return beboer;
-    }
     public ObservableList<Deadline> getReminder() {
         ObservableList<Deadline> reminder = FXCollections.observableArrayList();// DER SKAL INKLUDERES ET LINJESKIFT EFER XXXX ANTAL ANSLAG
         reminder.add(new Deadline("01/02/2017", "407 skal aflevere\n studiekontrol her"));
@@ -885,11 +910,7 @@ public class Main extends Application
         //værelsesUdlejning.add(new VaerelsesUdlejning(404,new java.util.Date(2017,10,29)));
         return værelsesUdlejning;
     }
-    public ObservableList<Dispensation> getDispensation(){
-        ObservableList<Dispensation> dispensation = FXCollections.observableArrayList();
-        dispensation.add(new Dispensation(401,"Mette",new java.util.Date(2018,10,01),new java.util.Date(2017,10,01), "Beboeren skal 19/01 dokumentere afsluttet studie", "Beboeren skal 20/01 dokumentere at have søgt studie", "Beboeren skal 21/01 her dokumentere optag på nyt studie."));
-        return dispensation;
-    }
+
     public ObservableList<Fremleje> getFremleje() {
         ObservableList<Fremleje> fremleje = FXCollections.observableArrayList();
         fremleje.add(new Fremleje(422, "Mette Frederiksen", "Jesper mikkelsen", new java.util.Date(2017, 10, 1), new java.util.Date(2017, 12, 31)));
@@ -905,271 +926,5 @@ public class Main extends Application
         protokol.add(new Protokol(new Date(2017, 5,15), "Jessica","Mathias","Janus","Peter","Natali"));
         return protokol;
     }
-
-    public TableView visSal(int startSal, int slutSal)
-    {
-        TableView<Beboer> beboerListe = new TableView<>();
-        final ObservableList<Beboer> beboerData = FXCollections.observableArrayList();
-
-        visBeboerTableView(beboerListe);
-
-        beboerData.clear();
-        try{
-            String sql = "SELECT * FROM Beboer WHERE VaerelseNR BETWEEN "+startSal+" AND "+slutSal;
-            preparedStatement = conn.prepareStatement(sql);
-            resultSet = preparedStatement.executeQuery();
-
-            while(resultSet.next())
-            {
-                beboerData.add(new Beboer(
-                        resultSet.getInt("VaerelseNr"),
-                        resultSet.getString("Navn"),
-                        resultSet.getDate("Indflytningsdato"),
-                        resultSet.getString("Uddannelsested"),
-                        resultSet.getDate("Uddanelsesstart"),
-                        resultSet.getDate("Uddannelseafsluttes"),
-                        resultSet.getString("Uddannelseretning"),
-                        resultSet.getString("Email"),
-                        resultSet.getString("KontrolStatus"),
-                        resultSet.getString("SlutStudieMaaned"),
-                        resultSet.getString("IndflytningsMaaned")
-                ));
-                beboerListe.setItems(beboerData);
-            }
-            preparedStatement.close();
-            resultSet.close();
-        }catch (SQLException e){
-            e.printStackTrace();
-        }
-        return beboerListe;
-
-    }
-
-    public TableView visStudieKontrolBeboer()
-    {
-        beboerListe = new TableView<>();
-        final ObservableList<Beboer> studieKontrolData = FXCollections.observableArrayList();
-
-        studieKontrolData.clear();
-        visStudieKontrolTableView(beboerListe);
-
-        try{
-            String sql = "SELECT VaerelseNr, Navn, Indflytningsdato, Uddannelsested, Uddanelsesstart, Uddannelseafsluttes, Uddannelseretning, KontrolStatus \n" +
-                    "FROM Beboer WHERE KontrolStatus IS NULL OR KontrolStatus=''";
-
-            preparedStatement = conn.prepareStatement(sql);
-            resultSet = preparedStatement.executeQuery();
-
-            while(resultSet.next())
-            {
-                studieKontrolData.add(new Beboer(
-                        resultSet.getInt("VaerelseNr"),
-                        resultSet.getString("Navn"),
-                        resultSet.getDate("Indflytningsdato"),
-                        resultSet.getString("Uddannelsested"),
-                        resultSet.getDate("Uddanelsesstart"),
-                        resultSet.getDate("Uddannelseafsluttes"),
-                        resultSet.getString("Uddannelseretning"),
-                        resultSet.getString("KontrolStatus")
-                        ));
-                beboerListe.setItems(studieKontrolData);
-            }
-            preparedStatement.close();
-            resultSet.close();
-        }catch (SQLException e){
-            e.printStackTrace();
-        }
-        return beboerListe;
-
-    }
-    public TableView visStudieKontrolMaaned(String status, String maaned)
-    {
-        beboerListe = new TableView<>();
-        final ObservableList<Beboer> studieKontrolData = FXCollections.observableArrayList();
-
-            studieKontrolData.clear();
-            visStudieKontrolTableView(beboerListe);
-
-            try{
-                String sql = "SELECT VaerelseNr, Navn, Indflytningsdato, Uddannelsested, Uddanelsesstart, Uddannelseafsluttes, Uddannelseretning, KontrolStatus \n" +
-                        "FROM Beboer WHERE KontrolStatus = '"+status+"' AND SlutStudieMaaned = '"+maaned+"'";
-
-                preparedStatement = conn.prepareStatement(sql);
-                resultSet = preparedStatement.executeQuery();
-
-            while(resultSet.next())
-            {
-                studieKontrolData.add(new Beboer(
-                        resultSet.getInt("VaerelseNr"),
-                        resultSet.getString("Navn"),
-                        resultSet.getDate("Indflytningsdato"),
-                        resultSet.getString("Uddannelsested"),
-                        resultSet.getDate("Uddanelsesstart"),
-                        resultSet.getDate("Uddannelseafsluttes"),
-                        resultSet.getString("Uddannelseretning"),
-                        resultSet.getString("KontrolStatus")
-                ));
-                beboerListe.setItems(studieKontrolData);
-            }
-            preparedStatement.close();
-            resultSet.close();
-        }catch (SQLException e){
-            e.printStackTrace();
-        }
-        return beboerListe;
-
-    }
-    /**
-     * @return
-     */
-    public TableView visAlleBeboer()
-    {
-        beboerListe = new TableView<>();
-        final ObservableList<Beboer> beboerData = FXCollections.observableArrayList();
-
-        beboerData.clear();
-        visBeboerTableView(beboerListe);
-
-        try{
-            String sql = "SELECT * FROM Beboer";
-            preparedStatement = conn.prepareStatement(sql);
-            resultSet = preparedStatement.executeQuery();
-
-            while(resultSet.next())
-            {
-                beboerData.add(new Beboer(
-                        resultSet.getInt("VaerelseNr"),
-                        resultSet.getString("Navn"),
-                        resultSet.getDate("Indflytningsdato"),
-                        resultSet.getString("Uddannelsested"),
-                        resultSet.getDate("Uddanelsesstart"),
-                        resultSet.getDate("Uddannelseafsluttes"),
-                        resultSet.getString("Uddannelseretning"),
-                        resultSet.getString("Email"),
-                        resultSet.getString("KontrolStatus"),
-                        resultSet.getString("SlutStudieMaaned"),
-                        resultSet.getString("IndflytningsMaaned")
-                ));
-                beboerListe.setItems(beboerData);
-            }
-            preparedStatement.close();
-            resultSet.close();
-        }catch (SQLException e){
-            e.printStackTrace();
-        }
-        return beboerListe;
-
-    }
-    public void visStudieKontrolTableView(TableView studieKontrolListe){
-
-        TableColumn<Beboer, Integer> værelseBeboerListe = new TableColumn<>("Vaerelse");
-        værelseBeboerListe.setMinWidth(100);
-        værelseBeboerListe.setCellValueFactory(new PropertyValueFactory<>("vaerelseNr"));//Property need to match the class's field names
-
-        TableColumn<Beboer, String> navnBeboerListe = new TableColumn<>("Navn");
-        navnBeboerListe.setMinWidth(100);
-        navnBeboerListe.setCellValueFactory(new PropertyValueFactory<>("navn"));//Property need to match the class's field names
-
-        TableColumn<Beboer, Date> indflytningsdatoBeboerliste = new TableColumn<>("Indflytningsdato");
-        indflytningsdatoBeboerliste.setMinWidth(100);
-        indflytningsdatoBeboerliste.setCellValueFactory(new PropertyValueFactory<>("indflytdato"));//Property need to match the class's field names
-
-        TableColumn<Beboer, String> institutionBeboerListe = new TableColumn<>("Uddannelses-\ninstitution");
-        institutionBeboerListe.setMinWidth(100);
-        institutionBeboerListe.setCellValueFactory(new PropertyValueFactory<>("uddannelsested"));//Property need to match the class's field names
-
-        TableColumn<Beboer, Date> påbegyndtUddannelseBeboerListe = new TableColumn<>("Uddannelse\nPåbegyndt:");
-        påbegyndtUddannelseBeboerListe.setMinWidth(100);
-        påbegyndtUddannelseBeboerListe.setCellValueFactory(new PropertyValueFactory<>("uddannelsestart"));//Property need to match the class's field names
-
-        TableColumn<Beboer, Date> uddannelseAfsluttesBeboerListe = new TableColumn<>("Uddannelse\nforventes\nafsluttet: ");
-        uddannelseAfsluttesBeboerListe.setMinWidth(100);
-        uddannelseAfsluttesBeboerListe.setCellValueFactory(new PropertyValueFactory<>("uddannelseafslut"));//Property need to match the class's field names
-
-        TableColumn<Beboer, String> uddannelsesRetningBeboerListe = new TableColumn<>("Uddannelsesretning");
-        uddannelsesRetningBeboerListe.setMinWidth(100);
-        uddannelsesRetningBeboerListe.setCellValueFactory(new PropertyValueFactory<>("uddannelseretning"));//Property need to match the class's field names
-
-        TableColumn<Beboer, String> kontrolStatus = new TableColumn<>("KontrolStatus");
-        kontrolStatus.setMinWidth(100);
-        kontrolStatus.setCellValueFactory(new PropertyValueFactory<>("kontrolStatus"));
-        studieKontrolListe.setItems(getBeboer());
-        studieKontrolListe.getColumns().addAll(værelseBeboerListe, navnBeboerListe, indflytningsdatoBeboerliste, institutionBeboerListe, påbegyndtUddannelseBeboerListe, uddannelseAfsluttesBeboerListe, uddannelsesRetningBeboerListe, kontrolStatus);
-
-    }
-    // Viser tabledview med alle bebeor informationer.
-    public void visBeboerTableView(TableView beboerListe){
-
-        TableColumn<Beboer, Integer> værelseBeboerListe = new TableColumn<>("Vaerelse");
-        værelseBeboerListe.setMinWidth(100);
-        værelseBeboerListe.setCellValueFactory(new PropertyValueFactory<>("vaerelseNr"));//Property need to match the class's field names
-
-        TableColumn<Beboer, String> navnBeboerListe = new TableColumn<>("Navn");
-        navnBeboerListe.setMinWidth(100);
-        navnBeboerListe.setCellValueFactory(new PropertyValueFactory<>("navn"));//Property need to match the class's field names
-
-        TableColumn<Beboer, Date> indflytningsdatoBeboerliste = new TableColumn<>("Indflytningsdato");
-        indflytningsdatoBeboerliste.setMinWidth(100);
-        indflytningsdatoBeboerliste.setCellValueFactory(new PropertyValueFactory<>("indflytdato"));//Property need to match the class's field names
-
-        TableColumn<Beboer, String> institutionBeboerListe = new TableColumn<>("Uddannelses-\ninstitution");
-        institutionBeboerListe.setMinWidth(100);
-        institutionBeboerListe.setCellValueFactory(new PropertyValueFactory<>("uddannelsested"));//Property need to match the class's field names
-
-        TableColumn<Beboer, Date> påbegyndtUddannelseBeboerListe = new TableColumn<>("Uddannelse\nPåbegyndt:");
-        påbegyndtUddannelseBeboerListe.setMinWidth(100);
-        påbegyndtUddannelseBeboerListe.setCellValueFactory(new PropertyValueFactory<>("uddannelsestart"));//Property need to match the class's field names
-
-        TableColumn<Beboer, Date> uddannelseAfsluttesBeboerListe = new TableColumn<>("Uddannelse\nforventes\nafsluttet: ");
-        uddannelseAfsluttesBeboerListe.setMinWidth(100);
-        uddannelseAfsluttesBeboerListe.setCellValueFactory(new PropertyValueFactory<>("uddannelseafslut"));//Property need to match the class's field names
-
-        TableColumn<Beboer, String> uddannelsesRetningBeboerListe = new TableColumn<>("Uddannelsesretning");
-        uddannelsesRetningBeboerListe.setMinWidth(100);
-        uddannelsesRetningBeboerListe.setCellValueFactory(new PropertyValueFactory<>("uddannelseretning"));//Property need to match the class's field names
-
-        TableColumn<Beboer, String> emailBeboerListe = new TableColumn<>("Email");
-        emailBeboerListe.setMinWidth(100);
-        emailBeboerListe.setCellValueFactory(new PropertyValueFactory<>("email"));
-
-        beboerListe.setItems(getBeboer());
-        beboerListe.getColumns().addAll(værelseBeboerListe, navnBeboerListe, indflytningsdatoBeboerliste, institutionBeboerListe, påbegyndtUddannelseBeboerListe, uddannelseAfsluttesBeboerListe, uddannelsesRetningBeboerListe, emailBeboerListe);
-
-    }
-    public void visDispensationsTableView(TableView<Dispensation> dispensationsView)
-    {
-        TableColumn<Dispensation, Integer> værelseDispensation = new TableColumn<>("Værelse");
-        værelseDispensation.setMaxWidth(70);
-        værelseDispensation.setCellValueFactory(new PropertyValueFactory<>("værelse"));//Property need to match the class's field names
-
-        TableColumn<Dispensation, String> navnDispensation = new TableColumn<>("Navn");
-        navnDispensation.setMaxWidth(200);
-        navnDispensation.setCellValueFactory(new PropertyValueFactory<>("navn"));//Property need to match the class's field names
-
-        TableColumn<Dispensation, Date> startDatoDispensation = new TableColumn<>("Dispensation\nstarter d.");
-        startDatoDispensation.setMaxWidth(100);
-        startDatoDispensation.setCellValueFactory(new PropertyValueFactory<>("startDato"));//Property need to match the class's field names
-
-        TableColumn<Dispensation, String> deadline1Dispensation = new TableColumn<>("Deadline 1");
-        deadline1Dispensation.setMaxWidth(250);
-        deadline1Dispensation.setCellValueFactory(new PropertyValueFactory<>("deadline1"));//Property need to match the class's field names
-
-        TableColumn<Dispensation, String> deadline2Dispensation = new TableColumn<>("Deadline 2");
-        deadline2Dispensation.setMaxWidth(250);
-        deadline2Dispensation.setCellValueFactory(new PropertyValueFactory<>("deadline2"));//Property need to match the class's field names
-
-        TableColumn<Dispensation, String> deadline3Dispensation = new TableColumn<>("Deadline 3");
-        deadline3Dispensation.setMaxWidth(250);
-        deadline3Dispensation.setCellValueFactory(new PropertyValueFactory<>("deadline3"));//Property need to match the class's field names
-
-        TableColumn<Dispensation, Date> ophørsDatoDispensation = new TableColumn<>("Dispensation\nOphører d.");
-        ophørsDatoDispensation.setMaxWidth(100);
-        ophørsDatoDispensation.setCellValueFactory(new PropertyValueFactory<>("ophørsDato"));//Property need to match the class's field names
-
-        dispensationsView.setItems(getDispensation());
-        dispensationsView.getColumns().addAll(værelseDispensation,navnDispensation,startDatoDispensation,deadline1Dispensation, deadline2Dispensation, deadline3Dispensation, ophørsDatoDispensation);
-        dispensationsView.setMaxSize(1080, 400);
-    }
-
 }
 

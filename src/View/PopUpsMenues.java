@@ -1,9 +1,9 @@
 package View; /**
  * Created by Janus on 07-02-2017.
  */
-import Controller.HovedMenuFunktion;
 import Model.Beboer;
 import Model.Log;
+import Model.SQL_DML_Beboer;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -14,18 +14,15 @@ import javafx.scene.control.*;
 import javafx.geometry.*;
 
 import java.sql.*;
-import java.sql.Date;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 
-public class PopUps
+public class PopUpsMenues
 {
     PreparedStatement preparedStatement;
     Connection conn;
     ResultSet resultSet;
-    HovedMenuFunktion hovedMenuFunktion = new HovedMenuFunktion();
+    SQL_DML_Beboer sql_dml_beboer = new SQL_DML_Beboer();
 
 
     public void tilføjDeadline(String title, String message)
@@ -74,10 +71,6 @@ public class PopUps
         window.showAndWait();
     }
 
-    /**
-     *
-     */
-
     public void opretBeboer(Connection conn, TableView<Beboer> beboerListe, ObservableList<Beboer> beboerData) {
 
         Stage window = new Stage();
@@ -115,50 +108,9 @@ public class PopUps
         buttonOpretBeboer.setOnAction(e -> window.close());
         buttonOpretBeboer.setPadding(new Insets(20));
         buttonOpretBeboer.setOnAction((ActionEvent e) -> {
-            try{
-                String sqlInsert = "INSERT INTO Beboer (VaerelseNr, Navn, Indflytningsdato, Uddannelsested, Uddanelsesstart, Uddannelseafsluttes, Uddannelseretning, Email, KontrolStatus, SlutStudieMaaned, IndflytningsMaaned) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
-                preparedStatement = conn.prepareStatement(sqlInsert);
-                preparedStatement.setString(1, textVærelse.getText());
-                preparedStatement.setString(2, textNavn.getText());
-                preparedStatement.setString(3, textIndflytning.getText());
-                preparedStatement.setString(4, textUddannelsesInstitution.getText());
-                preparedStatement.setString(5, textUddannelsePåbegyndt.getText());
-                preparedStatement.setString(6, textUddannelseForventesAfsluttet.getText());
-                preparedStatement.setString(7, textUddannelsesRetning.getText());
-                preparedStatement.setString(8, textEmail.getText());
-                preparedStatement.setString(9, textStatus.getText());
-                preparedStatement.setString(10, textSlutMaaned.getText());
-                preparedStatement.setString(11, textIndflytMaaned.getText());
-
-                preparedStatement.execute();
-                preparedStatement.close();
-                try{
-                    java.util.Date dateindflyt = new SimpleDateFormat("yyyy-MM-dd").parse(textIndflytning.getText());
-                    java.util.Date uddanelsestart = new SimpleDateFormat("yyyy-MM-dd").parse(textUddannelsePåbegyndt.getText());
-                    java.util.Date uddannelseslut = new SimpleDateFormat("yyyy-MM-dd").parse(textUddannelseForventesAfsluttet.getText());
-
-                    beboerData.add(new Beboer(Integer.parseInt(textVærelse.getText()),textNavn.getText(), dateindflyt, textUddannelsesInstitution.getText(), uddanelsestart ,uddannelseslut, textUddannelsesRetning.getText(), textEmail.getText(),textStatus.getText(),textSlutMaaned.getText(),textIndflytMaaned.getText()));
-                    beboerListe.getColumns().get(0).setVisible(false);
-                    beboerListe.getColumns().get(0).setVisible(true);
-
-                }catch (Exception exc){
-                    exc.printStackTrace();
-                }
-                beboerOkAlert();                    //hovedMenuFunktion.opdatereBeboerListe();
-
-                try{
-                    System.out.println("tableview skal opdateres samtidig her i GUI !!!");
-                }catch (NullPointerException ex){
-                    ex.printStackTrace();
-                    System.out.println(ex);
-                }
-                window.close();
-
-            }catch(SQLException ex){
-                ex.printStackTrace();
-            }
-
+            sql_dml_beboer.insertData_Beboer(window, conn, beboerListe,beboerData,
+                    textVærelse,textNavn,textIndflytning,textUddannelsesInstitution,textUddannelsePåbegyndt,
+                    textUddannelseForventesAfsluttet,textUddannelsesRetning,textEmail,textStatus,textSlutMaaned,textIndflytMaaned);
         });
 
         VBox leftLayout = new VBox(14, labelVærelse, labelNavn, labelIndflytning, labelUddannelsesInstitution, labelUddannelsePåbegyndt, labelUddannelseForventesAfsluttet, labelUddannelsesRetning, labelEmail, buttonFortryd);
@@ -179,7 +131,7 @@ public class PopUps
         alert.setHeaderText(null);
         alert.setTitle("Beboer Info");
         alert.setContentText("Beboer oprettet korrekt.");
-        //Log.insertIntoLog("Beboer oprettet");
+        Log.insertIntoLog("Beboer oprettet");
         alert.show();
     }
     public void beboerOpdateretOKAlert(){
@@ -187,7 +139,7 @@ public class PopUps
         alert.setHeaderText(null);
         alert.setTitle("Beboer Opdatering Info");
         alert.setContentText("Beboer er opdateret korrekt.");
-        //Log.insertIntoLog("Beboer Opdateret");
+        Log.insertIntoLog("Beboer Opdateret");
         alert.show();
     }
     /**
@@ -232,27 +184,8 @@ public class PopUps
         hentBeboerInfoButton.setMinSize(120, 120);
         hentBeboerInfoButton.setMaxSize(120, 120);
         hentBeboerInfoButton.setOnAction(e -> {
-            try{
-                String currentSql = "SELECT * FROM Beboer WHERE VaerelseNr ="+textFindVærelse.getText();
-                preparedStatement = conn.prepareStatement(currentSql);
-                resultSet = preparedStatement.executeQuery();
-
-                while(resultSet.next()){
-                    textVærelse.setText(resultSet.getString("VaerelseNr"));
-                    textNavn.setText(resultSet.getString("Navn"));
-                    textIndflytning.setText(resultSet.getString("Indflytningsdato"));
-                    textUddannelsesInstitution.setText(resultSet.getString("Uddannelsested"));
-                    textUddannelsePåbegyndt.setText(resultSet.getString("Uddanelsesstart"));
-                    textUddannelseForventesAfsluttet.setText(resultSet.getString("Uddannelseafsluttes"));
-                    textUddannelsesRetning.setText(resultSet.getString("Uddannelseretning"));
-                    textEmail.setText(resultSet.getString("Email"));
-                }
-                preparedStatement.close();
-                resultSet.close();
-
-            }catch (SQLException ex){
-                ex.printStackTrace();
-            }
+            sql_dml_beboer.hentBeboer(conn, textFindVærelse, textVærelse, textNavn,textIndflytning,textUddannelsesInstitution,
+                    textUddannelsePåbegyndt,textUddannelseForventesAfsluttet,textUddannelsesRetning,textEmail);
         });
         Separator separator = new Separator();
         separator.setValignment(VPos.CENTER);
@@ -265,28 +198,8 @@ public class PopUps
         Button buttonOpdaterBeboer = new Button("Opdater Beboer");
         buttonOpdaterBeboer.setPadding(new Insets(20));
         buttonOpdaterBeboer.setOnAction(e -> {
-           try{
-                String updateSql = "UPDATE Beboer SET VaerelseNr = ?, Navn = ?, Indflytningsdato = ?, Uddannelsested = ?, Uddanelsesstart = ?," +
-                            "Uddannelseafsluttes = ?, Uddannelseretning = ?, Email = ? WHERE VaerelseNr="+textFindVærelse.getText();
-
-                preparedStatement = conn.prepareStatement(updateSql);
-                preparedStatement.setString(1, textVærelse.getText());
-                preparedStatement.setString(2, textNavn.getText());
-                preparedStatement.setString(3, textIndflytning.getText());
-                preparedStatement.setString(4, textUddannelsesInstitution.getText());
-                preparedStatement.setString(5, textUddannelsePåbegyndt.getText());
-                preparedStatement.setString(6, textUddannelseForventesAfsluttet.getText());
-                preparedStatement.setString(7, textUddannelsesRetning.getText());
-                preparedStatement.setString(8, textEmail.getText());
-
-                preparedStatement.executeUpdate();
-                preparedStatement.close();
-                beboerOpdateretOKAlert();
-                window.close();
-            }catch (SQLException sqle){
-                sqle.printStackTrace();
-            }
-
+            sql_dml_beboer.opdatereBeboer(conn, window, textFindVærelse, textVærelse, textNavn, textIndflytning, textUddannelsesInstitution,
+                    textUddannelsePåbegyndt,textUddannelseForventesAfsluttet,textUddannelsesRetning,textEmail);
         });
 
         VBox topLeftLayout = new VBox(10, hentBeboerInfoButton);
@@ -353,29 +266,8 @@ public class PopUps
         hentBeboerInfoButton.setMinSize(120, 120);
         hentBeboerInfoButton.setMaxSize(120, 120);
         hentBeboerInfoButton.setOnAction(e -> {
-            try{
-                String currentSql = "SELECT VaerelseNr, Navn, Indflytningsdato, Uddannelsested, Uddanelsesstart, Uddannelseafsluttes, Uddannelseretning, KontrolStatus,SlutStudieMaaned, IndflytningsMaaned FROM Beboer WHERE VaerelseNr="+textFindVærelse.getText();
-                preparedStatement = conn.prepareStatement(currentSql);
-                resultSet = preparedStatement.executeQuery();
-
-                while(resultSet.next()){
-                    textVærelse.setText(resultSet.getString("VaerelseNr"));
-                    textNavn.setText(resultSet.getString("Navn"));
-                    textIndflytning.setText(resultSet.getString("Indflytningsdato"));
-                    textUddannelsesInstitution.setText(resultSet.getString("Uddannelsested"));
-                    textUddannelsePåbegyndt.setText(resultSet.getString("Uddanelsesstart"));
-                    textUddannelseForventesAfsluttet.setText(resultSet.getString("Uddannelseafsluttes"));
-                    textUddannelsesRetning.setText(resultSet.getString("Uddannelseretning"));
-                    textStatus.setText(resultSet.getString("KontrolStatus"));
-                    textSlutMaaned.setText(resultSet.getString("SlutStudieMaaned"));
-                    textIndflytMaaned.setText(resultSet.getString("IndflytningsMaaned"));
-                }
-                preparedStatement.close();
-                resultSet.close();
-
-            }catch (SQLException ex){
-                ex.printStackTrace();
-            }
+            sql_dml_beboer.hentStudieKontrolInfo(conn, textFindVærelse, textVærelse,textNavn,textIndflytning,textUddannelsesInstitution,
+            textUddannelsePåbegyndt,textUddannelseForventesAfsluttet,textUddannelsesRetning,textStatus,textSlutMaaned,textIndflytMaaned);
         });
         Separator separator = new Separator();
         separator.setValignment(VPos.CENTER);
@@ -388,31 +280,9 @@ public class PopUps
         Button buttonOpdaterBeboer = new Button("Opdater Beboer");
         buttonOpdaterBeboer.setPadding(new Insets(20));
         buttonOpdaterBeboer.setOnAction(e -> {
-            try{
-                String updateSql1 = "UPDATE Beboer SET VaerelseNr = ?, Navn = ?, Indflytningsdato = ?, Uddannelsested = ?, Uddanelsesstart = ?," +
-                        "Uddannelseafsluttes = ?, Uddannelseretning = ?, KontrolStatus = ?, SlutStudieMaaned = ?, IndflytningsMaaned=? WHERE VaerelseNr="+textFindVærelse.getText();
-
-                preparedStatement = conn.prepareStatement(updateSql1);
-                preparedStatement.setString(1, textVærelse.getText());
-                preparedStatement.setString(2, textNavn.getText());
-                preparedStatement.setString(3, textIndflytning.getText());
-                preparedStatement.setString(4, textUddannelsesInstitution.getText());
-                preparedStatement.setString(5, textUddannelsePåbegyndt.getText());
-                preparedStatement.setString(6, textUddannelseForventesAfsluttet.getText());
-                preparedStatement.setString(7, textUddannelsesRetning.getText());
-                preparedStatement.setString(8, textStatus.getText());
-                preparedStatement.setString(9, textSlutMaaned.getText());
-                preparedStatement.setString(10,textIndflytMaaned.getText());
-
-                preparedStatement.executeUpdate();
-                preparedStatement.close();
-                beboerOpdateretOKAlert();
-
-                window.close();
-            }catch (SQLException sqle){
-                sqle.printStackTrace();
-            }
-
+            sql_dml_beboer.opdatereStudieKontrol(conn, window, textFindVærelse, textVærelse,textNavn,textIndflytning,
+                    textUddannelsesInstitution, textUddannelsePåbegyndt,textUddannelseForventesAfsluttet,textUddannelsesRetning,
+                    textStatus,textSlutMaaned,textIndflytMaaned);
         });
 
         VBox topLeftLayout = new VBox(10, hentBeboerInfoButton);
@@ -447,6 +317,8 @@ public class PopUps
         window.initModality(Modality.APPLICATION_MODAL);
         window.setTitle(title);
         window.setMinWidth(250);
+
+        ArrayList skabelonText = new ArrayList();
 
         Label vælgMånedDerUdføresStudiekontrolForLabel = new Label("Vælg indflytningsmåned/måned for afslutning\naf studier der skal udføres studiekontrol for:");
         ChoiceBox hvilkenMånedDerPåbegyndesStudiekontrolForChoiceBox = new ChoiceBox(FXCollections.observableArrayList(
