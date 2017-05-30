@@ -14,37 +14,6 @@ public class Dispensation {
     private String deadline3;
     private Date ophørsDato;
 
-    public Dispensation(){
-        værelse = 0;
-        navn = "";
-        startDato = new Date();
-        deadline1 = "";
-        deadline2 = "";
-        deadline3 = "";
-        ophørsDato = new Date();
-    }
-    public Dispensation(int værelse, String navn, Date startDato, Date ophørsDato){
-        this.værelse = værelse;
-        this.startDato = startDato;
-        this.navn = navn;
-        this.ophørsDato = ophørsDato;
-
-    }
-    public Dispensation(int værelse, String navn,Date startDato, Date ophørsDato, String deadline1){
-        this.værelse = værelse;
-        this.navn = navn;
-        this.startDato = startDato;
-        this.ophørsDato = ophørsDato;
-        this.deadline1 = deadline1;
-    }
-    public Dispensation(int værelse, String navn,Date startDato, Date ophørsDato, String deadline1, String deadline2){
-        this.værelse = værelse;
-        this.navn = navn;
-        this.startDato = startDato;
-        this.ophørsDato = ophørsDato;
-        this.deadline1 = deadline1;
-        this.deadline2 = deadline2;
-    }
     public Dispensation(int værelse, String navn,Date startDato, Date ophørsDato, String deadline1, String deadline2, String deadline3){
         this.værelse = værelse;
         this.navn = navn;

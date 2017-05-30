@@ -13,13 +13,7 @@ public class Fremleje {
     private Date startDato;
     private Date slutDato;
 
-    public Fremleje(){
-        værelse = 0;
-        fremlejetager = "";
-        fremlejer = "";
-        startDato = new Date();
-        slutDato = new Date();
-    }
+
     public Fremleje(int værelse, String fremlejetager, String fremlejer, Date startDato, Date slutDato){
         this.værelse = værelse;
         this.fremlejetager = fremlejetager;
