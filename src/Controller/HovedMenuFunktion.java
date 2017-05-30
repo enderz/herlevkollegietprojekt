@@ -23,7 +23,7 @@ import java.util.Date;
  */
 public class HovedMenuFunktion {
 
-    TableView<Beboer> beboerListe;
+    /*TableView<Beboer> beboerListe;
     //final ObservableList<Beboer> beboerData = FXCollections.observableArrayList();
     PreparedStatement preparedStatement;
     ResultSet resultSet;
@@ -115,7 +115,7 @@ public class HovedMenuFunktion {
         alert.setTitle("Beboer Info");
         alert.setContentText("Beboer oprettet korrekt.");
         alert.show();
-    }
+    }*/
 
 
 }

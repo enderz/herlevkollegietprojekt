@@ -19,9 +19,6 @@ public class Beboer {
     private String slutStudieMaaned;
     private String indflytMaaned;
 
-    public Beboer(){
-    }
-
     public Beboer(int vaerelseNr, String navn, Date indflytdato, String uddannelsested, Date uddannelsestart,
                   Date uddannelseafslut, String uddannelseretning, String email, String kontrolStatus, String slutStudieMaaned, String indflytMaaned )
     {
@@ -36,10 +33,20 @@ public class Beboer {
         this.kontrolStatus = kontrolStatus;
         this.slutStudieMaaned = slutStudieMaaned;
         this.indflytMaaned = indflytMaaned;
-
+    }
+    public Beboer(int vaerelseNr, String navn, Date indflytdato, String uddannelsested, Date uddannelsestart,
+                  Date uddannelseafslut, String uddannelseretning, String kontrolStatus)
+    {
+        this.vaerelseNr = vaerelseNr;
+        this.navn = navn;
+        this.indflytdato = indflytdato;
+        this.uddannelsested = uddannelsested;
+        this.uddannelsestart = uddannelsestart;
+        this.uddannelseafslut = uddannelseafslut;
+        this.uddannelseretning = uddannelseretning;
+        this.kontrolStatus = kontrolStatus;
 
     }
-
     public int getVaerelseNr() {
         return vaerelseNr;
     }

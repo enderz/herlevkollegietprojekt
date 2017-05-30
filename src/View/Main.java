@@ -40,7 +40,6 @@ public class Main extends Application
     PreparedStatement preparedStatement;
     ResultSet resultSet;
     TableView<Beboer> beboerListe;
-    TableView<StudieKontrol> studieKontrolListe;
     final ObservableList<Beboer> beboerData = FXCollections.observableArrayList();
 
     TestController testController = new TestController();
@@ -317,30 +316,42 @@ public class Main extends Application
         MenuBar menuBar = new MenuBar(menuVis, menuHelp);
 
         //TableView med studiekontrol informationer
-        studieKontrolListe = new TableView<>();
+        //studieKontrolListe = new TableView<>();
         //Center Layout of StudiekontrolMenu
         TabPane centerLayout = new TabPane();
         centerLayout.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
 
         Tab tabAlle = new Tab("Igangværende\nStudiekontroller");
-        Tab tab1 = new Tab("Januar");
-        Tab tab2 = new Tab("Februar");
-        Tab tab3 = new Tab("Marts");
-        Tab tab4 = new Tab("April");
-        Tab tab5 = new Tab("Maj");
-        Tab tab6 = new Tab("Juni");
-        Tab tab7 = new Tab("Juli");
-        Tab tab8 = new Tab("August");
-        Tab tab9 = new Tab("September");
-        Tab tab10 = new Tab("Oktober");
-        Tab tab11 = new Tab("November");
-        Tab tab12 = new Tab("December");
+        Tab tabJan = new Tab("Januar");
+        Tab tabFeb = new Tab("Februar");
+        Tab tabMart = new Tab("Marts");
+        Tab tabApr = new Tab("April");
+        Tab tabMaj = new Tab("Maj");
+        Tab tabJuni = new Tab("Juni");
+        Tab tabJuli = new Tab("Juli");
+        Tab tabAug = new Tab("August");
+        Tab tabSep = new Tab("September");
+        Tab tabOkt = new Tab("Oktober");
+        Tab tabNov = new Tab("November");
+        Tab tabDec = new Tab("December");
 
         centerLayout.setTabMinWidth(60);
         tabAlle.setContent(visStudieKontrolBeboer());
+        tabJan.setContent(visStudieKontrolMaaned("Godkendt", "Januar"));
+        tabFeb.setContent(visStudieKontrolMaaned("Godkendt", "Februar"));
+        tabMart.setContent(visStudieKontrolMaaned("Godkendt","Marts"));
+        tabApr.setContent(visStudieKontrolMaaned("Godkendt","April"));
+        tabMaj.setContent(visStudieKontrolMaaned("Godkendt","Maj"));
+        tabJuni.setContent(visStudieKontrolMaaned("Godkendt","Juni"));
+        tabJuli.setContent(visStudieKontrolMaaned("Godkendt","Juli"));
+        tabAug.setContent(visStudieKontrolMaaned("Godkendt","August"));
+        tabSep.setContent(visStudieKontrolMaaned("Godkendt","September"));
+        tabOkt.setContent(visStudieKontrolMaaned("Godkendt","Oktober"));
+        tabNov.setContent(visStudieKontrolMaaned("Godkendt","November"));
+        tabDec.setContent(visStudieKontrolMaaned("Godkendt","December"));
 
         tabAlle.getStyleClass().add("tab-studiekontrol");
-        centerLayout.getTabs().addAll(tabAlle, tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8, tab9, tab10, tab11, tab12);
+        centerLayout.getTabs().addAll(tabAlle, tabJan, tabFeb, tabMart, tabApr, tabMaj, tabJuni, tabJuli, tabAug, tabSep, tabOkt, tabNov, tabDec);
 
         //Left Layout of StudiekontrolMenu
         VBox leftLayout = new VBox(10, tilbagebutton1);
@@ -409,11 +420,11 @@ public class Main extends Application
 
         centerBeboerlisteLayout.setTabMinWidth(60);
         tabAlleBeboere.setContent(visAlleBeboer());
-        tab2Sal.setContent(visAndenSal());
-        tab3Sal.setContent(visTredjeSal());
-        tab4Sal.setContent(visFjerdeSal());
-        tab5Sal.setContent(visFemteSal());
-        tab6Sal.setContent(visSjetteSal());
+        tab2Sal.setContent(visSal(200,300));
+        tab3Sal.setContent(visSal(300,400));
+        tab4Sal.setContent(visSal(400,500));
+        tab5Sal.setContent(visSal(500,600));
+        tab6Sal.setContent(visSal(600,700));
         centerBeboerlisteLayout.getTabs().addAll(tabAlleBeboere, tab2Sal, tab3Sal, tab4Sal, tab5Sal, tab6Sal);
 
         //Left Layout of beboerListeMenu
@@ -843,6 +854,7 @@ public class Main extends Application
         alert.setHeaderText(null);
         alert.setTitle("Login Status");
         alert.setContentText("Login Fejlet!\nBruger findes ikke. Prøv igen.");
+        Log.insertIntoLog("Fejl i login.");
         alert.show();
     }
     private void logoutAlert(){
@@ -853,6 +865,7 @@ public class Main extends Application
         Optional<ButtonType> result = alert.showAndWait();
         if (result.get() == ButtonType.OK) {
             window.setScene(sceneLogin);
+            Log.insertIntoLog("Bruger logget ud af hovedmenuen");
         }
         else{
             alert.close();
@@ -892,12 +905,8 @@ public class Main extends Application
         protokol.add(new Protokol(new Date(2017, 5,15), "Jessica","Mathias","Janus","Peter","Natali"));
         return protokol;
     }
-    public ObservableList<StudieKontrol> getStudieKontrol(){
-        ObservableList<StudieKontrol> studieKontrol = FXCollections.observableArrayList();
-        return  studieKontrol;
-    }
 
-    public TableView visAndenSal()
+    public TableView visSal(int startSal, int slutSal)
     {
         TableView<Beboer> beboerListe = new TableView<>();
         final ObservableList<Beboer> beboerData = FXCollections.observableArrayList();
@@ -906,7 +915,7 @@ public class Main extends Application
 
         beboerData.clear();
         try{
-            String sql = "SELECT * FROM Beboer WHERE VaerelseNR BETWEEN 200 AND 300";
+            String sql = "SELECT * FROM Beboer WHERE VaerelseNR BETWEEN "+startSal+" AND "+slutSal;
             preparedStatement = conn.prepareStatement(sql);
             resultSet = preparedStatement.executeQuery();
 
@@ -927,160 +936,8 @@ public class Main extends Application
                 ));
                 beboerListe.setItems(beboerData);
             }
-            //preparedStatement.close();
-            //resultSet.close();
-        }catch (SQLException e){
-            e.printStackTrace();
-        }
-        return beboerListe;
-
-    }
-    public TableView visTredjeSal()
-    {
-        TableView<Beboer> beboerListe = new TableView<>();
-        final ObservableList<Beboer> beboerData = FXCollections.observableArrayList();
-
-        visBeboerTableView(beboerListe);
-
-        beboerData.clear();
-        try{
-            String sql = "SELECT * FROM Beboer WHERE VaerelseNR BETWEEN 300 AND 400";
-            preparedStatement = conn.prepareStatement(sql);
-            resultSet = preparedStatement.executeQuery();
-
-            while(resultSet.next())
-            {
-                beboerData.add(new Beboer(
-                        resultSet.getInt("VaerelseNr"),
-                        resultSet.getString("Navn"),
-                        resultSet.getDate("Indflytningsdato"),
-                        resultSet.getString("Uddannelsested"),
-                        resultSet.getDate("Uddanelsesstart"),
-                        resultSet.getDate("Uddannelseafsluttes"),
-                        resultSet.getString("Uddannelseretning"),
-                        resultSet.getString("Email"),
-                        resultSet.getString("KontrolStatus"),
-                        resultSet.getString("SlutStudieMaaned"),
-                        resultSet.getString("IndflytningsMaaned")
-                ));
-                beboerListe.setItems(beboerData);
-            }
-            //preparedStatement.close();
-            //resultSet.close();
-        }catch (SQLException e){
-            e.printStackTrace();
-        }
-        return beboerListe;
-
-    }
-    public TableView visFjerdeSal()
-    {
-        TableView<Beboer> beboerListe = new TableView<>();
-        final ObservableList<Beboer> beboerData = FXCollections.observableArrayList();
-
-        visBeboerTableView(beboerListe);
-
-        beboerData.clear();
-        try{
-            String sql = "SELECT * FROM Beboer WHERE VaerelseNR BETWEEN 400 AND 500";
-            preparedStatement = conn.prepareStatement(sql);
-            resultSet = preparedStatement.executeQuery();
-
-            while(resultSet.next())
-            {
-                beboerData.add(new Beboer(
-                        resultSet.getInt("VaerelseNr"),
-                        resultSet.getString("Navn"),
-                        resultSet.getDate("Indflytningsdato"),
-                        resultSet.getString("Uddannelsested"),
-                        resultSet.getDate("Uddanelsesstart"),
-                        resultSet.getDate("Uddannelseafsluttes"),
-                        resultSet.getString("Uddannelseretning"),
-                        resultSet.getString("Email"),
-                        resultSet.getString("KontrolStatus"),
-                        resultSet.getString("SlutStudieMaaned"),
-                        resultSet.getString("IndflytningsMaaned")
-                ));
-                beboerListe.setItems(beboerData);
-            }
-            //preparedStatement.close();
-            //resultSet.close();
-        }catch (SQLException e){
-            e.printStackTrace();
-        }
-        return beboerListe;
-
-    }
-    public TableView visFemteSal()
-    {
-        TableView<Beboer> beboerListe = new TableView<>();
-        final ObservableList<Beboer> beboerData = FXCollections.observableArrayList();
-
-        visBeboerTableView(beboerListe);
-
-        beboerData.clear();
-        try{
-            String sql = "SELECT * FROM Beboer WHERE VaerelseNR BETWEEN 500 AND 600";
-            preparedStatement = conn.prepareStatement(sql);
-            resultSet = preparedStatement.executeQuery();
-
-            while(resultSet.next())
-            {
-                beboerData.add(new Beboer(
-                        resultSet.getInt("VaerelseNr"),
-                        resultSet.getString("Navn"),
-                        resultSet.getDate("Indflytningsdato"),
-                        resultSet.getString("Uddannelsested"),
-                        resultSet.getDate("Uddanelsesstart"),
-                        resultSet.getDate("Uddannelseafsluttes"),
-                        resultSet.getString("Uddannelseretning"),
-                        resultSet.getString("Email"),
-                        resultSet.getString("KontrolStatus"),
-                        resultSet.getString("SlutStudieMaaned"),
-                        resultSet.getString("IndflytningsMaaned")
-                ));
-                beboerListe.setItems(beboerData);
-            }
-            //preparedStatement.close();
-            //resultSet.close();
-        }catch (SQLException e){
-            e.printStackTrace();
-        }
-        return beboerListe;
-
-    }
-    public TableView visSjetteSal()
-    {
-        TableView<Beboer> beboerListe = new TableView<>();
-        final ObservableList<Beboer> beboerData = FXCollections.observableArrayList();
-
-        visBeboerTableView(beboerListe);
-
-        beboerData.clear();
-        try{
-            String sql = "SELECT * FROM Beboer WHERE VaerelseNR BETWEEN 600 AND 700";
-            preparedStatement = conn.prepareStatement(sql);
-            resultSet = preparedStatement.executeQuery();
-
-            while(resultSet.next())
-            {
-                beboerData.add(new Beboer(
-                        resultSet.getInt("VaerelseNr"),
-                        resultSet.getString("Navn"),
-                        resultSet.getDate("Indflytningsdato"),
-                        resultSet.getString("Uddannelsested"),
-                        resultSet.getDate("Uddanelsesstart"),
-                        resultSet.getDate("Uddannelseafsluttes"),
-                        resultSet.getString("Uddannelseretning"),
-                        resultSet.getString("Email"),
-                        resultSet.getString("KontrolStatus"),
-                        resultSet.getString("SlutStudieMaaned"),
-                        resultSet.getString("IndflytningsMaaned")
-                ));
-                beboerListe.setItems(beboerData);
-            }
-            //preparedStatement.close();
-            //resultSet.close();
+            preparedStatement.close();
+            resultSet.close();
         }catch (SQLException e){
             e.printStackTrace();
         }
@@ -1090,22 +947,59 @@ public class Main extends Application
 
     public TableView visStudieKontrolBeboer()
     {
-        studieKontrolListe = new TableView<>();
-        final ObservableList<StudieKontrol> studieKontrolData = FXCollections.observableArrayList();
+        beboerListe = new TableView<>();
+        final ObservableList<Beboer> studieKontrolData = FXCollections.observableArrayList();
 
         studieKontrolData.clear();
-        visStudieKontrolTableView(studieKontrolListe);
+        visStudieKontrolTableView(beboerListe);
 
         try{
-            //String sql = "SELECT * FROM StudieKontrol WHERE KontrolStatus = ''";
             String sql = "SELECT VaerelseNr, Navn, Indflytningsdato, Uddannelsested, Uddanelsesstart, Uddannelseafsluttes, Uddannelseretning, KontrolStatus \n" +
                     "FROM Beboer WHERE KontrolStatus IS NULL OR KontrolStatus=''";
+
             preparedStatement = conn.prepareStatement(sql);
             resultSet = preparedStatement.executeQuery();
 
             while(resultSet.next())
             {
-                studieKontrolData.add(new StudieKontrol(
+                studieKontrolData.add(new Beboer(
+                        resultSet.getInt("VaerelseNr"),
+                        resultSet.getString("Navn"),
+                        resultSet.getDate("Indflytningsdato"),
+                        resultSet.getString("Uddannelsested"),
+                        resultSet.getDate("Uddanelsesstart"),
+                        resultSet.getDate("Uddannelseafsluttes"),
+                        resultSet.getString("Uddannelseretning"),
+                        resultSet.getString("KontrolStatus")
+                        ));
+                beboerListe.setItems(studieKontrolData);
+            }
+            preparedStatement.close();
+            resultSet.close();
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+        return beboerListe;
+
+    }
+    public TableView visStudieKontrolMaaned(String status, String maaned)
+    {
+        beboerListe = new TableView<>();
+        final ObservableList<Beboer> studieKontrolData = FXCollections.observableArrayList();
+
+            studieKontrolData.clear();
+            visStudieKontrolTableView(beboerListe);
+
+            try{
+                String sql = "SELECT VaerelseNr, Navn, Indflytningsdato, Uddannelsested, Uddanelsesstart, Uddannelseafsluttes, Uddannelseretning, KontrolStatus \n" +
+                        "FROM Beboer WHERE KontrolStatus = '"+status+"' AND SlutStudieMaaned = '"+maaned+"'";
+
+                preparedStatement = conn.prepareStatement(sql);
+                resultSet = preparedStatement.executeQuery();
+
+            while(resultSet.next())
+            {
+                studieKontrolData.add(new Beboer(
                         resultSet.getInt("VaerelseNr"),
                         resultSet.getString("Navn"),
                         resultSet.getDate("Indflytningsdato"),
@@ -1115,14 +1009,14 @@ public class Main extends Application
                         resultSet.getString("Uddannelseretning"),
                         resultSet.getString("KontrolStatus")
                 ));
-                studieKontrolListe.setItems(studieKontrolData);
+                beboerListe.setItems(studieKontrolData);
             }
-            //preparedStatement.close();
-            //resultSet.close();
+            preparedStatement.close();
+            resultSet.close();
         }catch (SQLException e){
             e.printStackTrace();
         }
-        return studieKontrolListe;
+        return beboerListe;
 
     }
     /**
@@ -1158,8 +1052,8 @@ public class Main extends Application
                 ));
                 beboerListe.setItems(beboerData);
             }
-            //preparedStatement.close();
-            //resultSet.close();
+            preparedStatement.close();
+            resultSet.close();
         }catch (SQLException e){
             e.printStackTrace();
         }
@@ -1168,47 +1062,38 @@ public class Main extends Application
     }
     public void visStudieKontrolTableView(TableView studieKontrolListe){
 
-        TableColumn<StudieKontrol, Integer> værelseBeboerListe = new TableColumn<>("Vaerelse");
+        TableColumn<Beboer, Integer> værelseBeboerListe = new TableColumn<>("Vaerelse");
         værelseBeboerListe.setMinWidth(100);
         værelseBeboerListe.setCellValueFactory(new PropertyValueFactory<>("vaerelseNr"));//Property need to match the class's field names
 
-        TableColumn<StudieKontrol, String> navnBeboerListe = new TableColumn<>("Navn");
+        TableColumn<Beboer, String> navnBeboerListe = new TableColumn<>("Navn");
         navnBeboerListe.setMinWidth(100);
         navnBeboerListe.setCellValueFactory(new PropertyValueFactory<>("navn"));//Property need to match the class's field names
 
-        TableColumn<StudieKontrol, Date> indflytningsdatoBeboerliste = new TableColumn<>("Indflytningsdato");
+        TableColumn<Beboer, Date> indflytningsdatoBeboerliste = new TableColumn<>("Indflytningsdato");
         indflytningsdatoBeboerliste.setMinWidth(100);
         indflytningsdatoBeboerliste.setCellValueFactory(new PropertyValueFactory<>("indflytdato"));//Property need to match the class's field names
 
-        TableColumn<StudieKontrol, String> institutionBeboerListe = new TableColumn<>("Uddannelses-\ninstitution");
+        TableColumn<Beboer, String> institutionBeboerListe = new TableColumn<>("Uddannelses-\ninstitution");
         institutionBeboerListe.setMinWidth(100);
         institutionBeboerListe.setCellValueFactory(new PropertyValueFactory<>("uddannelsested"));//Property need to match the class's field names
 
-        TableColumn<StudieKontrol, Date> påbegyndtUddannelseBeboerListe = new TableColumn<>("Uddannelse\nPåbegyndt:");
+        TableColumn<Beboer, Date> påbegyndtUddannelseBeboerListe = new TableColumn<>("Uddannelse\nPåbegyndt:");
         påbegyndtUddannelseBeboerListe.setMinWidth(100);
         påbegyndtUddannelseBeboerListe.setCellValueFactory(new PropertyValueFactory<>("uddannelsestart"));//Property need to match the class's field names
 
-        TableColumn<StudieKontrol, Date> uddannelseAfsluttesBeboerListe = new TableColumn<>("Uddannelse\nforventes\nafsluttet: ");
+        TableColumn<Beboer, Date> uddannelseAfsluttesBeboerListe = new TableColumn<>("Uddannelse\nforventes\nafsluttet: ");
         uddannelseAfsluttesBeboerListe.setMinWidth(100);
         uddannelseAfsluttesBeboerListe.setCellValueFactory(new PropertyValueFactory<>("uddannelseafslut"));//Property need to match the class's field names
 
-        TableColumn<StudieKontrol, String> uddannelsesRetningBeboerListe = new TableColumn<>("Uddannelsesretning");
+        TableColumn<Beboer, String> uddannelsesRetningBeboerListe = new TableColumn<>("Uddannelsesretning");
         uddannelsesRetningBeboerListe.setMinWidth(100);
         uddannelsesRetningBeboerListe.setCellValueFactory(new PropertyValueFactory<>("uddannelseretning"));//Property need to match the class's field names
 
-        TableColumn<StudieKontrol, String> kontrolStatus = new TableColumn<>("KontrolStatus");
+        TableColumn<Beboer, String> kontrolStatus = new TableColumn<>("KontrolStatus");
         kontrolStatus.setMinWidth(100);
         kontrolStatus.setCellValueFactory(new PropertyValueFactory<>("kontrolStatus"));
-
-        /*TableColumn<StudieKontrol, String> slutStudieMaaned = new TableColumn<>("SlutStudieMaaned");
-        slutStudieMaaned.setMinWidth(100);
-        slutStudieMaaned.setCellValueFactory(new PropertyValueFactory<>("slutStudeiMaaned"));
-
-        TableColumn<StudieKontrol, String> indflytMaaned = new TableColumn<>("IndflytningsMaaned");
-        indflytMaaned.setMinWidth(100);
-        indflytMaaned.setCellValueFactory(new PropertyValueFactory<>("indflytMaaned"));*/
-
-        studieKontrolListe.setItems(getStudieKontrol());
+        studieKontrolListe.setItems(getBeboer());
         studieKontrolListe.getColumns().addAll(værelseBeboerListe, navnBeboerListe, indflytningsdatoBeboerliste, institutionBeboerListe, påbegyndtUddannelseBeboerListe, uddannelseAfsluttesBeboerListe, uddannelsesRetningBeboerListe, kontrolStatus);
 
     }

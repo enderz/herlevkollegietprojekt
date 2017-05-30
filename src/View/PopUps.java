@@ -75,7 +75,7 @@ public class PopUps
     }
 
     /**
-     * Created by Janus on 07-02-2017.
+     *
      */
 
     public void opretBeboer(Connection conn, TableView<Beboer> beboerListe, ObservableList<Beboer> beboerData) {
@@ -116,7 +116,7 @@ public class PopUps
         buttonOpretBeboer.setPadding(new Insets(20));
         buttonOpretBeboer.setOnAction((ActionEvent e) -> {
             try{
-                String sqlInsert = "INSERT INTO Beboer (VaerelseNr, Navn, Indflytningsdato, Uddannelsested, Uddanelsesstart, Uddannelseafsluttes, Uddannelseretning, Email) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+                String sqlInsert = "INSERT INTO Beboer (VaerelseNr, Navn, Indflytningsdato, Uddannelsested, Uddanelsesstart, Uddannelseafsluttes, Uddannelseretning, Email, KontrolStatus, SlutStudieMaaned, IndflytningsMaaned) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
                 preparedStatement = conn.prepareStatement(sqlInsert);
                 preparedStatement.setString(1, textVærelse.getText());
@@ -127,6 +127,9 @@ public class PopUps
                 preparedStatement.setString(6, textUddannelseForventesAfsluttet.getText());
                 preparedStatement.setString(7, textUddannelsesRetning.getText());
                 preparedStatement.setString(8, textEmail.getText());
+                preparedStatement.setString(9, textStatus.getText());
+                preparedStatement.setString(10, textSlutMaaned.getText());
+                preparedStatement.setString(11, textIndflytMaaned.getText());
 
                 preparedStatement.execute();
                 preparedStatement.close();
@@ -142,9 +145,9 @@ public class PopUps
                 }catch (Exception exc){
                     exc.printStackTrace();
                 }
-                beboerOkAlert();
-               try{
-                    //hovedMenuFunktion.opdatereBeboerListe();
+                beboerOkAlert();                    //hovedMenuFunktion.opdatereBeboerListe();
+
+                try{
                     System.out.println("tableview skal opdateres samtidig her i GUI !!!");
                 }catch (NullPointerException ex){
                     ex.printStackTrace();
@@ -351,7 +354,6 @@ public class PopUps
         hentBeboerInfoButton.setMaxSize(120, 120);
         hentBeboerInfoButton.setOnAction(e -> {
             try{
-                //String currentSql = "SELECT * FROM StudieKontrol WHERE VaerelseNr ="+textFindVærelse.getText();
                 String currentSql = "SELECT VaerelseNr, Navn, Indflytningsdato, Uddannelsested, Uddanelsesstart, Uddannelseafsluttes, Uddannelseretning, KontrolStatus,SlutStudieMaaned, IndflytningsMaaned FROM Beboer WHERE VaerelseNr="+textFindVærelse.getText();
                 preparedStatement = conn.prepareStatement(currentSql);
                 resultSet = preparedStatement.executeQuery();
