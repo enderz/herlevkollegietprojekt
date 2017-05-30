@@ -7,7 +7,8 @@ import java.util.ArrayList;
 /**
  * Created by Herlev Kollegiet Udvikler on 23-05-2017..
  */
-public class Skabelonudfyldning {
+public class Skabelonudfyldning
+{
     private ArrayList<String> keyWords = new ArrayList();
     private ArrayList<String> skabelonUdfyldninger = new ArrayList();
     private LocalDate localDate = LocalDate.now();

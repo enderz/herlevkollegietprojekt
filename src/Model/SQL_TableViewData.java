@@ -172,7 +172,6 @@ public class SQL_TableViewData
             e.printStackTrace();
         }
         return beboerListe;
-
     }
 }
 

@@ -13,14 +13,6 @@ public class Protokol {
     private String sjetteSalsTilstedeværelse;
 
 
-    public Protokol(){
-        dato = new Date();
-        andenSalsTilstedeværelse = "";
-        tredjeSalsTilstedeværelse = "";
-        fjerdeSalsTilstedeværelse = "";
-        femteSalsTilstedeværelse = "";
-        sjetteSalsTilstedeværelse = "";
-    }
     public Protokol(Date dato,String andenSalsTilstedeværelse, String tredjeSalsTilstedeværelse, String fjerdeSalsTilstedeværelse, String femteSalsTilstedeværelse, String sjetteSalsTilstedeværelse) {
         this.dato = dato;
         this.andenSalsTilstedeværelse = andenSalsTilstedeværelse;

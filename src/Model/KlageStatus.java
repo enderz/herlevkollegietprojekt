@@ -8,11 +8,6 @@ public class KlageStatus {
     private String navn;
     private int antalKlager;
 
-    public KlageStatus(){
-        værelse = 0;
-        navn = "";
-        antalKlager = 0;
-    }
     public KlageStatus(int værelse, String navn, int antalKlager){
         this.værelse = værelse;
         this.navn = navn;
