@@ -4,6 +4,8 @@ import java.util.Date;
 
 /**
  * Created by Herlev Kollegiet Udvikler on 05-05-2017.
+ *
+ * Udviklet af Janus Olsen & Ender Zorsøker
  */
 public class Beboer {
 

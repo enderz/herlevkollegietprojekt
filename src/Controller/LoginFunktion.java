@@ -6,6 +6,7 @@ import javafx.scene.control.TextField;
 import java.sql.*;
 /**
  * Created by Herlev Kollegiet Udvikler on 15-05-2017.
+ * Udviklet af Benjamin K. Pedersen & Ender Zorsøker
  */
 public class LoginFunktion implements ILoginFunktion {
 
@@ -13,6 +14,13 @@ public class LoginFunktion implements ILoginFunktion {
     SQL_DML_Beboer sql_dml_beboer = new SQL_DML_Beboer();
     PreparedStatement preparedStatement;
 
+    /**
+     * @param conn
+     * @param nameInput
+     * @param passwordInput
+     * @return
+     *
+     * */
     @Override
     public boolean login(Connection conn, TextField nameInput, TextField passwordInput) {
         boolean fundet = false;

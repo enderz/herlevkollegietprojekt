@@ -36,6 +36,9 @@ import java.util.Date;
 
 /**
  * Created by Herlev Kollegiet Udvikler on 07-05-2017..
+ *
+ * Daniel, Ender, Janus, Benjamin
+ *
  */
 public class Main extends Application
 {

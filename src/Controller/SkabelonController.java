@@ -14,6 +14,7 @@ import java.util.Arrays;
 import java.util.List;
 /**
  * Created by Herlev Kollegiet Udvikler on 24-05-2017.
+ * Udviklet af Daniel H.M.
  */
 public class SkabelonController implements ISkabelon
 {
@@ -24,12 +25,9 @@ public class SkabelonController implements ISkabelon
 
     public void fillDocument() {
         try {
-            // skal hardcodes for hvert document
-            //skabelon.setInputFilePath("C:\\Users\\Ender\\Desktop\\Projekt\\input.docx");
+
             skabelon.setInputFilePath("C:\\Users\\Ender\\Dropbox\\2.Semester_Afleveringer\\Projekt2017\\Blanketer\\Modsætte sig fremleje.docx");
-            //skabelon.setOutputFilePath("C:\\Users\\Ender\\Desktop\\Projekt\\output.docx");
             skabelon.setOutputFilePath("C:\\Users\\Ender\\Dropbox\\2.Semester_Afleveringer\\Projekt2017\\Blanketer\\Output.docx");
-            //C:\Users\Ender\Dropbox\2.Semester_Afleveringer\Projekt2017\Blanketer
 
             fillKeywordsArray();
 
@@ -39,9 +37,7 @@ public class SkabelonController implements ISkabelon
                 List<XWPFRun> runs = p.getRuns();
                 if (runs != null) {
                     for (XWPFRun r : runs) {
-
                         String text = r.getText(0);
-
                         String dagsDato = "[DAGS DATO]";
                         // erstater [DAGS DATO] med datoen for den dag programmet blev kørt
                         if (text != null) {
@@ -59,7 +55,6 @@ public class SkabelonController implements ISkabelon
                                 r.setText(text,0);
 
                             }
-
                         }
                     }
                 }
@@ -73,7 +68,6 @@ public class SkabelonController implements ISkabelon
             e.printStackTrace();
         }
     }
-
     //keywords skal hardcodes, for hvert document
     public void fillKeywordsArray()
     {
@@ -81,12 +75,10 @@ public class SkabelonController implements ISkabelon
         skabelon.setKeyWord(keyWords);
 
     }
-
     public ArrayList<String> fillSkabelonArray(ArrayList<String> skabelon)
     {
         return skabelon;
     }
-
     public void openFile(String fileName)
     {
         File file = new File("C:\\Users\\Ender\\Dropbox\\2.Semester_Afleveringer\\Projekt2017\\Blanketer\\"+fileName);

@@ -1,6 +1,6 @@
 package View;
 /**
- * Created by Herlev Kollegiet Udvikler on 12-05-2017.
+ * Created by Herlev Kollegiet Udvikler on 12-05-2017.H.M.
  */
 import Model.Beboer;
 import Model.Log;
@@ -128,7 +128,7 @@ public class PopUpsMenues
 
     }
     /**
-     * @param conn opretter database connection
+     * @param conn opretter database connection.
      * */
 
     public void opdaterBeboerInfo(Connection conn) {
@@ -212,7 +212,9 @@ public class PopUpsMenues
         window.setScene(scene);
         window.showAndWait();
     }
-
+    /**
+     * @param conn opretter database connection.
+     * */
     public void opdaterStudieKontrolInfo(Connection conn) {
         Stage window = new Stage();
 
@@ -295,7 +297,9 @@ public class PopUpsMenues
         window.setScene(scene);
         window.showAndWait();
     }
-
+    /**
+     * @param conn opretter database connection.
+     * */
     public void påbegyndStudieKontrol(Connection conn) {
         Stage window = new Stage();
 

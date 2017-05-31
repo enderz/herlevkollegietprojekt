@@ -8,6 +8,9 @@ import java.util.Date;
 
 /**
  * Created by Herlev Kollegiet Udvikler on 29-05-2017.
+ *
+ * Ender Zorsøker.
+ *
  */
 public class Log {
 

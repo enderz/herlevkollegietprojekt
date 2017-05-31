@@ -2,6 +2,8 @@ package Model;
 
 /**
  * Created by Herlev Kollegiet Udvikler on 08-05-2017.
+ *
+ * Ender Zorsøker
  */
 public class Bruger {
 

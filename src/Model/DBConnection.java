@@ -3,6 +3,9 @@ package Model;
 import java.sql.*;
 /**
  * Created by Herlev Kollegiet Udvikler on 07-05-2017.
+ *
+ * Udviklet af Ender Zorsøker
+ *
  */
 public class DBConnection {
 

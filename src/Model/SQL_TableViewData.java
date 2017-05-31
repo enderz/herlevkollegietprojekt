@@ -12,6 +12,8 @@ import java.sql.SQLException;
 
 /**
  * Created by Herlev Kollegiet Udvikler on 30-05-2017..
+ *
+ * Ender Zorsøker & Janus Olsen
  */
 public class SQL_TableViewData
 {

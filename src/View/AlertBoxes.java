@@ -7,6 +7,8 @@ import java.util.Optional;
 
 /**
  * Created by Herlev Kollegiet Udvikler on 30-05-2017.
+ *
+ * Ender Zorsøker & Benjamin K. Pedersen
  */
 public class AlertBoxes
 {

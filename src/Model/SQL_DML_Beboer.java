@@ -15,6 +15,9 @@ import java.text.SimpleDateFormat;
 
 /**
  * Created by Herlev Kollegiet Udvikler on 30-05-2017.
+ *
+ * Ender Zorsøker & Benjamin K. Pedersen
+ *
  */
 public class SQL_DML_Beboer
 {

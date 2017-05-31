@@ -11,6 +11,8 @@ import java.util.Date;
 
 /**
  * Created by Herlev Kollegiet Udvikler on 30-05-2017..
+ *
+ * Janus Olsen og Ender Zorsøker
  */
 public class TableViews
 {
@@ -48,6 +50,9 @@ public class TableViews
         reminder.add(new Deadline("01/02/2017", "407 skal aflevere\n studiekontrol her"));
         return reminder;
     }
+    /**
+     * @param beboerListe viser tableview med beboer informationer.
+     * */
     public void visBeboerTableView(TableView beboerListe){
 
         TableColumn<Beboer, Integer> værelseBeboerListe = new TableColumn<>("Vaerelse");

@@ -4,6 +4,8 @@ import java.util.Date;
 
 /**
  * Created by Herlev Kollegiet Udvikler on 15-05-2017.
+ *
+ * Janus Olsen.
  */
 public class Dispensation {
     private int værelse;
