@@ -1,5 +1,5 @@
 package Controller;
-import java.util.ArrayList;
+        import java.util.ArrayList;
 /**
  * Created by Herlev Kollegiet Udvikler on 25-05-2017.
  *
@@ -7,9 +7,9 @@ import java.util.ArrayList;
  */
 public interface ISkabelon {
 
-        //skal hardcodes
-        void fillKeywordsArray();
+    //skal hardcodes
+    void fillKeywordsArray();
 
-    }
+}
 
 
